@@ -53,7 +53,7 @@
             <column name="id" value="1"/>
             <column name="cardinality" value="test"/>
             <column name="form_name" value="main"/>
-            <column name="language" value="EN"/>
+            <column name="language" value="en"/>
             <column name="offset" value="24"/>
             <column name="padding" value="25"/>
             <column name="font" value="Times New Roman"/>

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.r2dbc.core.DatabaseClient;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Configuration
 public class AppConfig {
@@ -21,7 +21,7 @@ public class AppConfig {
     }
 
     @Bean
-    public MetadataDao metadataDao(DatabaseClient client) {
-        return new CacheableMetadataDao(new MetadataDaoImpl(client));
+    public MetadataDao metadataDao(NamedParameterJdbcTemplate jdbcTemplate) {
+        return new CacheableMetadataDao(new MetadataDaoImpl(jdbcTemplate));
     }
 }

@@ -1,18 +1,16 @@
 package org.sergei.metadata.app.dao.impl;
 
-import java.util.function.BiFunction;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-import io.r2dbc.spi.Row;
-import io.r2dbc.spi.RowMetadata;
 import org.sergei.metadata.app.dao.MetadataDao;
 import org.sergei.metadata.app.dto.Area;
 import org.sergei.metadata.app.dto.FormMetadata;
 import org.sergei.metadata.app.dto.Language;
 import org.sergei.metadata.app.dto.Layout;
 import org.sergei.metadata.app.dto.ViewField;
-import org.springframework.r2dbc.core.DatabaseClient;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class MetadataDaoImpl implements MetadataDao {
 
@@ -39,49 +37,44 @@ public class MetadataDaoImpl implements MetadataDao {
             "FROM layout l\n" +
             "WHERE l.form_name = :formName";
 
-    private final DatabaseClient client;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public MetadataDaoImpl(DatabaseClient client) {
-        this.client = client;
+    public MetadataDaoImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
-    public Mono<FormMetadata> getFormMetadata(String formName, String lang) {
-        return getLayoutMetadata(formName)
-                .collectList()
-                .flatMap(layout -> client.sql(QUERY_FORM_METADATA)
-                        .bind("formName", formName)
-                        .bind("lang", lang)
-                        .map((row, rowMetadata) -> FormMetadata.builder()
-                                .formName(row.get("form_name", String.class))
-                                .cardinality(row.get("cardinality", String.class))
-                                .lang(Language.valueOf(row.get("language", String.class)))
-                                .offset(row.get("offset", Integer.class))
-                                .padding(row.get("padding", Integer.class))
-                                .font(row.get("font", String.class))
-                                .fontSize(row.get("font_size", Integer.class))
-                                .description(row.get("description", String.class))
-                                .viewField(ViewField.builder()
-                                        .enabledByDefault(row.get("enabled_by_default", Integer.class))
-                                        .uiControl(row.get("ui_control", String.class))
-                                        .build())
-                                .layouts(layout)
-                                .build())
-                        .one());
+    public FormMetadata getFormMetadata(String formName, String lang) {
+        Map<String, Object> params = Map.of(
+                "formName", formName,
+                "lang", lang
+        );
+        return jdbcTemplate.queryForObject(QUERY_FORM_METADATA, params, (rs, index) -> FormMetadata.builder()
+                .formName(rs.getString("form_name"))
+                .cardinality(rs.getString("cardinality"))
+                .lang(Language.valueOf(rs.getString("language")
+                        .toUpperCase(Locale.ROOT)))
+                .offset(rs.getInt("offset"))
+                .padding(rs.getInt("padding"))
+                .font(rs.getString("font"))
+                .fontSize(rs.getInt("font_size"))
+                .description(rs.getString("description"))
+                .viewField(ViewField.builder()
+                        .enabledByDefault(rs.getInt("enabled_by_default"))
+                        .uiControl(rs.getString("ui_control"))
+                        .build())
+                .layouts(getLayoutMetadata(formName))
+                .build());
     }
 
-    private Flux<Layout> getLayoutMetadata(String formName) {
-        return client.sql(QUERY_LAYOUT_METADATA)
-                .bind("formName", formName)
-                .map((BiFunction<Row, RowMetadata, Object>) (row, rowMetadata) ->
-                        Layout.builder()
-                                .font(row.get("font", String.class))
-                                .fontSize(row.get("font_size", Integer.class))
-                                .area(Area.valueOf(row.get("area", String.class)))
-                                .weight(row.get("weight", Integer.class))
-                                .height(row.get("height", Integer.class))
-                                .build())
-                .all()
-                .cast(Layout.class);
+    private List<Layout> getLayoutMetadata(String formName) {
+        Map<String, String> params = Map.of("formName", formName);
+        return jdbcTemplate.query(QUERY_LAYOUT_METADATA, params, (rs, index) -> Layout.builder()
+                .font(rs.getString("font"))
+                .fontSize(rs.getInt("font_size"))
+                .area(Area.valueOf(rs.getString("area")))
+                .weight(rs.getInt("weight"))
+                .height(rs.getInt("height"))
+                .build());
     }
 }

@@ -1,12 +1,13 @@
 package org.sergei.metadata.app.dao.impl;
 
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.sergei.metadata.app.dao.MetadataDao;
 import org.sergei.metadata.app.dto.FormMetadata;
-import reactor.core.publisher.Mono;
+import org.sergei.metadata.app.exception.DataAccessException;
 
 public class CacheableMetadataDao implements MetadataDao {
 
@@ -22,14 +23,14 @@ public class CacheableMetadataDao implements MetadataDao {
     }
 
     @Override
-    public Mono<FormMetadata> getFormMetadata(String formName, String lang) {
-        MetadataCacheKey cacheKey = new MetadataCacheKey(formName, lang);
-        return Mono.justOrEmpty(cache.getIfPresent(cacheKey))
-                .switchIfEmpty(metadataDao.getFormMetadata(formName, lang)
-                        .flatMap(metadata -> {
-                            cache.put(cacheKey, metadata);
-                            return Mono.just(metadata);
-                        }));
+    public FormMetadata getFormMetadata(String formName, String lang) {
+        try {
+            MetadataCacheKey cacheKey = new MetadataCacheKey(formName, lang);
+            return cache.get(cacheKey, () -> metadataDao.getFormMetadata(formName, lang));
+        } catch (ExecutionException e) {
+            throw new DataAccessException(e, "Unable to get a metadata from cache for " +
+                    "formName={} with lang={}", formName, lang);
+        }
     }
 
     private static final class MetadataCacheKey {
