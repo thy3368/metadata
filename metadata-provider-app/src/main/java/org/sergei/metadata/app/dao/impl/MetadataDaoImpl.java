@@ -11,11 +11,9 @@ import org.sergei.metadata.app.dto.Language;
 import org.sergei.metadata.app.dto.Layout;
 import org.sergei.metadata.app.dto.ViewField;
 import org.springframework.r2dbc.core.DatabaseClient;
-import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-@Repository
 public class MetadataDaoImpl implements MetadataDao {
 
     private static final String QUERY_FORM_METADATA = "SELECT fm.form_name,\n" +
