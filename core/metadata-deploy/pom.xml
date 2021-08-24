@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.sergeivisotsky.metadata</groupId>
+        <groupId>io.github.sergeivisotsky.metadata</groupId>
         <artifactId>metadata-core-parent</artifactId>
         <version>${revision}</version>
     </parent>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.github.sergeivisotsky.metadata</groupId>
+        <groupId>io.github.sergeivisotsky.metadata</groupId>
         <artifactId>ref-impl-parent</artifactId>
         <version>${revision}</version>
     </parent>
@@ -22,7 +22,7 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.github.sergeivisotsky.metadata</groupId>
+            <groupId>io.github.sergeivisotsky.metadata</groupId>
             <artifactId>metadata-deploy</artifactId>
         </dependency>
         <dependency>
@@ -46,7 +46,7 @@
                 <configuration>
                     <classifier>fat</classifier>
                     <attach>false</attach>
-                    <mainClass>com.github.sergeivisotsky.metadata.deployer.DeployerApp</mainClass>
+                    <mainClass>io.github.sergeivisotsky.metadata.deployer.DeployerApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
