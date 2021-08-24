@@ -11,8 +11,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>metadata-provider-app</module>
-        <module>metadata-deployer</module>
+        <module>core</module>
+        <module>ref-impl</module>
     </modules>
 
     <properties>
