@@ -8,12 +8,29 @@
     <artifactId>metadata-provider-pom</artifactId>
     <version>${revision}</version>
 
+    <name>Metadata Provider</name>
+    <description>Metadata provisioning library</description>
+
     <packaging>pom</packaging>
 
     <modules>
         <module>core</module>
         <module>ref-impl</module>
     </modules>
+
+    <scm>
+        <url>https://github.com/sergeivisotsky/metadata-provider</url>
+        <connection>git://github.com/sergeivisotsky/metadata-provider.git</connection>
+        <developerConnection>git@github.com:sergeivisotsky/metadata-provider.git</developerConnection>
+    </scm>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <properties>
         <revision>0.0.1</revision>
