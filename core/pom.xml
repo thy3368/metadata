@@ -16,6 +16,7 @@
     <modules>
         <module>metadata-selector</module>
         <module>metadata-deploy</module>
+        <module>metadata-provider-starter</module>
     </modules>
 
 </project>
