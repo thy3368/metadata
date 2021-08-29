@@ -21,6 +21,9 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * @author Sergei Visotsky
+ */
 @Configuration
 @ConfigurationProperties(prefix = "cache")
 public class CacheConfigProperties {
