@@ -19,6 +19,7 @@ package io.github.sergeivisotsky.metadata.selector.config;
 import java.sql.ResultSet;
 
 import io.github.sergeivisotsky.metadata.selector.MetadataMapper;
+import io.github.sergeivisotsky.metadata.selector.config.properties.CacheConfigProperties;
 import io.github.sergeivisotsky.metadata.selector.dao.LookupMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.MetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.CacheableMetadataDao;

@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import io.github.sergeivisotsky.metadata.selector.config.CacheConfigProperties;
+import io.github.sergeivisotsky.metadata.selector.config.properties.CacheConfigProperties;
 import io.github.sergeivisotsky.metadata.selector.dao.MetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dto.FormMetadata;
 import io.github.sergeivisotsky.metadata.selector.exception.DataAccessException;

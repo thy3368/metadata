@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.selector.config;
+package io.github.sergeivisotsky.metadata.selector.config.properties;
 
 import java.util.concurrent.TimeUnit;
 

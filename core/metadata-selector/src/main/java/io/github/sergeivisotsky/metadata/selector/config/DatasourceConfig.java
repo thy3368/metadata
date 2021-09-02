@@ -18,6 +18,7 @@ package io.github.sergeivisotsky.metadata.selector.config;
 
 import javax.sql.DataSource;
 
+import io.github.sergeivisotsky.metadata.selector.config.properties.DataSourceConfigProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
