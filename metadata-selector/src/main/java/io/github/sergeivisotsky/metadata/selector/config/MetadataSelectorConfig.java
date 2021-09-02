@@ -29,8 +29,6 @@ import io.github.sergeivisotsky.metadata.selector.dto.FormMetadata;
 import io.github.sergeivisotsky.metadata.selector.dto.Layout;
 import io.github.sergeivisotsky.metadata.selector.dto.LookupHolder;
 import io.github.sergeivisotsky.metadata.selector.dto.LookupMetadata;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -40,9 +38,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  * @author Sergei Visotsky
  */
 @Configuration
-@EnableAutoConfiguration(exclude = {
-        JdbcTemplateAutoConfiguration.class
-})
 @ComponentScan(basePackages = {
         "io.github.sergeivisotsky.metadata.*"
 })

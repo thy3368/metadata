@@ -49,7 +49,7 @@ public class DatasourceConfig {
     }
 
     @Bean
-    public NamedParameterJdbcTemplate jdbcTemplate() {
+    public NamedParameterJdbcTemplate namedJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource());
     }
 }
