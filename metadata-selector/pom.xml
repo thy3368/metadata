@@ -6,7 +6,7 @@
 
     <parent>
         <groupId>io.github.sergeivisotsky.metadata</groupId>
-        <artifactId>metadata-core-parent</artifactId>
+        <artifactId>metadata-provider-parent</artifactId>
         <version>${revision}</version>
     </parent>
 

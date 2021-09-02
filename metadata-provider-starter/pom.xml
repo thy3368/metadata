@@ -6,26 +6,24 @@
 
     <parent>
         <groupId>io.github.sergeivisotsky.metadata</groupId>
-        <artifactId>metadata-provider-pom</artifactId>
+        <artifactId>metadata-provider-parent</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>ref-impl-parent</artifactId>
+    <artifactId>metadata-provider-starter</artifactId>
     <packaging>pom</packaging>
-
-    <modules>
-        <module>metadata-provider-app</module>
-        <module>metadata-deployer</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.github.sergeivisotsky.metadata</groupId>
-                <artifactId>metadata-provider-starter</artifactId>
+                <artifactId>metadata-selector</artifactId>
                 <version>${project.parent.version}</version>
-                <scope>import</scope>
-                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>io.github.sergeivisotsky.metadata</groupId>
+                <artifactId>metadata-deploy</artifactId>
+                <version>${project.parent.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
