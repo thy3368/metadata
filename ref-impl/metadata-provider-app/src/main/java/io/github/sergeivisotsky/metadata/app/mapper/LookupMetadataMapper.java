@@ -54,7 +54,7 @@ public class LookupMetadataMapper implements MetadataMapper<ResultSet, LookupMet
             return metadata;
         } catch (SQLException e) {
             throw new RuntimeException("Unable to get value from ResultSet for Mapper: {}" +
-                    FormMetadataMapper.class.getSimpleName(), e);
+                    LookupMetadataMapper.class.getSimpleName(), e);
         }
     }
 }
