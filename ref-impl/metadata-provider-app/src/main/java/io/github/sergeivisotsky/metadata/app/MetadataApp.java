@@ -23,9 +23,7 @@ import org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration
 /**
  * @author Sergei Visotsky
  */
-@SpringBootApplication(exclude = {
-        JdbcTemplateAutoConfiguration.class
-})
+@SpringBootApplication
 public class MetadataApp {
 
     public static void main(String[] args) {
