@@ -18,12 +18,12 @@
             <dependency>
                 <groupId>io.github.sergeivisotsky.metadata</groupId>
                 <artifactId>metadata-selector</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.github.sergeivisotsky.metadata</groupId>
                 <artifactId>metadata-deploy</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
