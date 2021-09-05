@@ -17,7 +17,6 @@ To get started with a usage of metadata provider just add the following maven de
 <dependency>
     <groupId>io.github.sergeivisotsky.metadata</groupId>
     <artifactId>metadata-selector</artifactId>
-    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -26,7 +25,6 @@ And the following dependency to a deployment application:
 <dependency>
     <groupId>io.github.sergeivisotsky.metadata</groupId>
     <artifactId>metadata-deploy</artifactId>
-    <version>0.0.2</version>
 </dependency>
 ```
 
@@ -35,8 +33,8 @@ dependencies to your `dependencyManegemnt` section of parent POM:
 ```html
 <dependency>
     <groupId>io.github.sergeivisotsky.metadata</groupId>
-    <artifactId>metadata-provider-starter</artifactId>
-    <version>0.0.2</version>
+    <artifactId>metadata-provider-bom</artifactId>
+    <version>0.0.7</version>
     <scope>import</scope>
     <type>pom</type>
 </dependency>
