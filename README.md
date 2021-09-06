@@ -7,8 +7,48 @@ This approach is especially useful in project teams with a high database compete
 In general provides an element alignment by invocation of a single endpoint which provides all data required like
 cardinality, language, font size, and font itself.
 
+Main point is that library itself aims to provide a configurable metadata engine and a set of endpoints 
+at the same time UI should be written from scratch taking into account corresponding use case specifics 
+to be able to properly handle a metadata and construct itself based on it.
+
 ## Sample usage
-Sample usage can be found in the following [repository](https://github.com/sergeivisotsky/metadata-provider-demo)
+Sample metadata configuration use case can be found in the following [repository](https://github.com/sergeivisotsky/metadata-provider-demo)
+
+## Extension points
+The main metadata provisioning classes are provides Out-Of-The-Box like `FormMetadata`, `Layout` etc.
+
+During the configuration a new class can be created and extend corresponding base class.
+
+Example:
+```java
+public class ExtendedFormMetadata extends FormMetadata {
+
+    private String facet;
+
+    public String getFacet() {
+        return facet;
+    }
+
+    public void setFacet(String facet) {
+        this.facet = facet;
+    }
+}
+```
+
+An `ExtendedFormMetadata` extends a `FormMetadata` and provides an additional field `facet`.
+
+At the same time all new fields should be added in a corresponding database table called `form_metadata` accordingly.
+
+Sample can be found in the following `db.changelog-24-08-2021.xml` changelog file in the following [repository](https://github.com/sergeivisotsky/metadata-provider-demo)
+
+In addition to this a corresponding mapper should be created. An example mapper is a `FormMetadataMapper` for a `FormMetadata`.
+
+Each new mapper should implement `MetadataMapper<ResultSet, FormMetadata>` which obligatory should contain a `ResultSet` 
+as the first parameter and corresponding metadata class in the second.
+
+`MetadataMapper` also provides a method `getSql()` which should contain a customized SQL.
+
+_NOTE: An initial SQL should be always used from the following [repository](https://github.com/sergeivisotsky/metadata-provider-demo) Also this is a repository from which each back-end implementation should d got started_
 
 ## Get started
 To get started with a usage of metadata provider just add the following maven dependency to the main application:
