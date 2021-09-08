@@ -119,7 +119,7 @@ class SampleCombo extends Component {
             .then(axios.spread((metadata, header) => {
                 let formattedMetadata = formatMetadata(metadata);
                 formattedMetadata = populateFields(header, formattedMetadata);
-                self.setState({metadata: formattedMetadata, activeTab: formattedMetadata.sections.get('Consignor')});
+                self.setState({metadata: formattedMetadata, activeTab: formattedMetadata.sections.get('comboContent')});
             }));
     }
 
