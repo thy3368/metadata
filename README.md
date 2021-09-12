@@ -22,7 +22,7 @@ See an OOTB feature usage example on combo boxes [Wiki page](https://github.com/
 ## Sample extension
 
 See a sample extension of metadata REST response with a mysterious footer metadata on 
-the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Sample-OOTB-usage)
+the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Sample-extension)
 
 ## Get started
 
