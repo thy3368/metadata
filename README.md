@@ -15,9 +15,14 @@ following [repository](https://github.com/sergeivisotsky/metadata-provider-demo)
 
 See an extension points [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Extension-points)
 
-## Usage on example of combo boxes
+## OOTB usage of combo box metadata
 
-See a usage example on combo boxes [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Usage-example)
+See an OOTB feature usage example on combo boxes [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Usage-example)
+
+## Sample extension
+
+See a sample extension of metadata REST response with a mysterious footer metadata on 
+the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Sample-OOTB-usage)
 
 ## Get started
 
