@@ -19,6 +19,7 @@ package io.github.sergeivisotsky.metadata.selector.config;
 import javax.sql.DataSource;
 
 import io.github.sergeivisotsky.metadata.selector.config.properties.DataSourceConfigProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -37,6 +38,7 @@ public class DatasourceConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
@@ -49,6 +51,7 @@ public class DatasourceConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public NamedParameterJdbcTemplate namedJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource());
     }

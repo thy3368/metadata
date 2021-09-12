@@ -31,6 +31,7 @@ import io.github.sergeivisotsky.metadata.selector.dto.Layout;
 import io.github.sergeivisotsky.metadata.selector.dto.LookupHolder;
 import io.github.sergeivisotsky.metadata.selector.dto.LookupMetadata;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -46,12 +47,14 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 public class MetadataSelectorConfig {
 
     @Bean
+    @ConditionalOnMissingBean
     public MetadataDao metadataDao(@Qualifier("simpleMetadataDao") MetadataDao metadataDao,
                                    CacheConfigProperties cacheConfigProperties) {
         return new CacheableMetadataDao(metadataDao, cacheConfigProperties);
     }
 
     @Bean("simpleMetadataDao")
+    @ConditionalOnMissingBean
     public MetadataDao simpleMetadataDao(NamedParameterJdbcTemplate jdbcTemplate,
                                          MetadataMapper<ResultSet, FormMetadata> formMetadataMapper,
                                          MetadataMapper<ResultSet, Layout> layoutMapper,
@@ -61,6 +64,7 @@ public class MetadataSelectorConfig {
 
 
     @Bean
+    @ConditionalOnMissingBean
     public LookupMetadataDao lookupMetadataDao(NamedParameterJdbcTemplate jdbcTemplate,
                                                MetadataMapper<ResultSet, LookupHolder> lookupHolderMapper,
                                                MetadataMapper<ResultSet, LookupMetadata> lookupMetadataMapper) {
