@@ -17,9 +17,13 @@
 package io.github.sergeivisotsky.metadata.selector.config;
 
 import io.github.sergeivisotsky.metadata.selector.config.properties.CacheConfigProperties;
+import io.github.sergeivisotsky.metadata.selector.dao.ComboBoxMetadataDao;
+import io.github.sergeivisotsky.metadata.selector.dao.LayoutMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.LookupMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.MetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.CacheableMetadataDao;
+import io.github.sergeivisotsky.metadata.selector.dao.impl.ComboBoxMetadataDaoImpl;
+import io.github.sergeivisotsky.metadata.selector.dao.impl.LayoutMetadataDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.LookupMetadataDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.MetadataDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.dto.ComboBox;
@@ -33,7 +37,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
  * @author Sergei Visotsky
@@ -52,18 +55,26 @@ public class MetadataSelectorConfig {
     }
 
     @Bean("simpleMetadataDao")
-    public MetadataDao simpleMetadataDao(NamedParameterJdbcTemplate jdbcTemplate,
-                                         MetadataMapper<FormMetadata> formMetadataMapper,
-                                         MetadataMapper<Layout> layoutMapper,
-                                         MetadataMapper<ComboBox> comboBoxMapper) {
-        return new MetadataDaoImpl(jdbcTemplate, formMetadataMapper, layoutMapper, comboBoxMapper);
+    public MetadataDao simpleMetadataDao(MetadataMapper<FormMetadata> formMetadataMapper,
+                                         ComboBoxMetadataDao comboBoxMetadataDao,
+                                         LayoutMetadataDao layoutMetadataDao) {
+        return new MetadataDaoImpl(formMetadataMapper, comboBoxMetadataDao, layoutMetadataDao);
+    }
+
+    @Bean
+    public LayoutMetadataDao layoutMetadataDao(MetadataMapper<Layout> layoutMapper) {
+        return new LayoutMetadataDaoImpl(layoutMapper);
+    }
+
+    @Bean
+    public ComboBoxMetadataDao comboBoxMetadataDao(MetadataMapper<ComboBox> comboBoxMapper) {
+        return new ComboBoxMetadataDaoImpl(comboBoxMapper);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public LookupMetadataDao lookupMetadataDao(NamedParameterJdbcTemplate jdbcTemplate,
-                                               MetadataMapper<LookupHolder> lookupHolderMapper,
+    public LookupMetadataDao lookupMetadataDao(MetadataMapper<LookupHolder> lookupHolderMapper,
                                                MetadataMapper<LookupMetadata> lookupMetadataMapper) {
-        return new LookupMetadataDaoImpl(jdbcTemplate, lookupHolderMapper, lookupMetadataMapper);
+        return new LookupMetadataDaoImpl(lookupHolderMapper, lookupMetadataMapper);
     }
 }

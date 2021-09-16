@@ -19,25 +19,22 @@ package io.github.sergeivisotsky.metadata.selector.dao.impl;
 import java.util.List;
 import java.util.Map;
 
+import io.github.sergeivisotsky.metadata.selector.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.LookupMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dto.LookupHolder;
 import io.github.sergeivisotsky.metadata.selector.dto.LookupMetadata;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
  * @author Sergei Visotsky
  */
-public class LookupMetadataDaoImpl implements LookupMetadataDao {
+public class LookupMetadataDaoImpl extends AbstractMetadataDao implements LookupMetadataDao {
 
-    private final NamedParameterJdbcTemplate jdbcTemplate;
     private final MetadataMapper<LookupHolder> lookupHolderMapper;
     private final MetadataMapper<LookupMetadata> lookupMetadataMapper;
 
-    public LookupMetadataDaoImpl(NamedParameterJdbcTemplate jdbcTemplate,
-                                 MetadataMapper<LookupHolder> lookupHolderMapper,
+    public LookupMetadataDaoImpl(MetadataMapper<LookupHolder> lookupHolderMapper,
                                  MetadataMapper<LookupMetadata> lookupMetadataMapper) {
-        this.jdbcTemplate = jdbcTemplate;
         this.lookupHolderMapper = lookupHolderMapper;
         this.lookupMetadataMapper = lookupMetadataMapper;
     }
