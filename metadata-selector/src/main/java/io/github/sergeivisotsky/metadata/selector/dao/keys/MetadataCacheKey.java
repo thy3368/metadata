@@ -16,5 +16,8 @@
 
 package io.github.sergeivisotsky.metadata.selector.dao.keys;
 
+/**
+ * @author Sergei Visotsky
+ */
 public abstract class MetadataCacheKey {
 }
