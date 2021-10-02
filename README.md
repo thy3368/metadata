@@ -24,6 +24,10 @@ See an OOTB feature usage example on combo boxes [Wiki page](https://github.com/
 See a sample extension of metadata REST response with a mysterious footer metadata on 
 the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Sample-extension)
 
+## Database schema
+Follow the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Database-schema) to see 
+how database structure looks like.
+
 ## Get started
 
 See how to get started on the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Get-started)
