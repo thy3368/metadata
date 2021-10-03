@@ -22,6 +22,7 @@ import java.util.Map;
 import io.github.sergeivisotsky.metadata.selector.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.LayoutMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.domain.Layout;
+import io.github.sergeivisotsky.metadata.selector.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
 
 /**
@@ -40,7 +41,12 @@ public class LayoutMetadataDaoImpl extends AbstractMetadataDao implements Layout
      */
     @Override
     public List<Layout> getLayoutMetadata(String viewName) {
-        Map<String, Object> params = Map.of("viewName", viewName);
-        return executeQuery(params, layoutMapper);
+        try {
+            Map<String, Object> params = Map.of("viewName", viewName);
+            return executeQuery(params, layoutMapper);
+        } catch (Exception e) {
+            throw new MetadataStorageException(e, "Unable to get a layout metadata with the " +
+                    "following parameters: viewName={}", viewName);
+        }
     }
 }

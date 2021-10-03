@@ -19,25 +19,25 @@ package io.github.sergeivisotsky.metadata.selector.exception;
 /**
  * @author Sergei Visotsky
  */
-public class DataAccessException extends RuntimeException {
+public class MetadataStorageException extends RuntimeException {
 
-    public DataAccessException() {
+    public MetadataStorageException() {
         super();
     }
 
-    public DataAccessException(String message) {
+    public MetadataStorageException(String message) {
         super(message);
     }
 
-    public DataAccessException(String message, Object... params) {
+    public MetadataStorageException(String message, Object... params) {
         super(String.format(message.replace("{}", "%s"), params));
     }
 
-    public DataAccessException(Throwable cause, String message, Object... params) {
+    public MetadataStorageException(Throwable cause, String message, Object... params) {
         super(String.format(message.replace("{}", "%s"), params), cause);
     }
 
-    public DataAccessException(Throwable cause) {
+    public MetadataStorageException(Throwable cause) {
         super(cause);
     }
 }

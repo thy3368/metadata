@@ -27,6 +27,7 @@ import io.github.sergeivisotsky.metadata.selector.dao.FormMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormField;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormMetadata;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormSection;
+import io.github.sergeivisotsky.metadata.selector.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
 import io.github.sergeivisotsky.metadata.selector.mapper.ModelMapper;
 
@@ -55,35 +56,40 @@ public class FormMetadataDaoImpl extends AbstractMetadataDao implements FormMeta
      */
     @Override
     public FormMetadata getFormMetadata(String lang, String formName) {
-        Map<String, Object> params = Map.of(
-                "lang", lang,
-                "formName", formName
-        );
+        try {
+            Map<String, Object> params = Map.of(
+                    "lang", lang,
+                    "formName", formName
+            );
 
-        List<FormField> formFields = jdbcTemplate.query(formFieldMapper.getSql(), params,
-                (rs, index) -> formFieldMapper.map(rs));
+            List<FormField> formFields = jdbcTemplate.query(formFieldMapper.getSql(), params,
+                    (rs, index) -> formFieldMapper.map(rs));
 
-        List<FormSection> formSections = jdbcTemplate.query(formSectionMapper.getSql(), params,
-                (rs, index) -> {
-                    FormSection section = formSectionMapper.map(rs);
-                    section.setFields(formFields
-                            .stream()
-                            .collect(Collectors.groupingBy(FormField::getFormSectionName))
-                            .getOrDefault(rs.getString("name"), List.of()));
-                    return section;
-                });
+            List<FormSection> formSections = jdbcTemplate.query(formSectionMapper.getSql(), params,
+                    (rs, index) -> {
+                        FormSection section = formSectionMapper.map(rs);
+                        section.setFields(formFields
+                                .stream()
+                                .collect(Collectors.groupingBy(FormField::getFormSectionName))
+                                .getOrDefault(rs.getString("name"), List.of()));
+                        return section;
+                    });
 
-        Map<Object, List<FormSection>> sectionMap = formSections.stream()
-                .collect(Collectors.groupingBy(s -> Optional.ofNullable(s.getParentSectionName())));
+            Map<Object, List<FormSection>> sectionMap = formSections.stream()
+                    .collect(Collectors.groupingBy(s -> Optional.ofNullable(s.getParentSectionName())));
 
-        List<FormSection> hierarchicalSections = toHierarchicalList(sectionMap.get(Optional.empty()), sectionMap);
+            List<FormSection> hierarchicalSections = toHierarchicalList(sectionMap.get(Optional.empty()), sectionMap);
 
-        return jdbcTemplate.queryForObject(formMetadataMapper.getSql(), params,
-                (rs, index) -> {
-                    FormMetadata metadata = formMetadataMapper.map(rs);
-                    metadata.setSections(hierarchicalSections);
-                    return metadata;
-                });
+            return jdbcTemplate.queryForObject(formMetadataMapper.getSql(), params,
+                    (rs, index) -> {
+                        FormMetadata metadata = formMetadataMapper.map(rs);
+                        metadata.setSections(hierarchicalSections);
+                        return metadata;
+                    });
+        } catch (Exception e) {
+            throw new MetadataStorageException(e, "Unable to get a metadata for a form with the " +
+                    "following parameters: formName={}, lang={}", formName, lang);
+        }
     }
 
     private List<FormSection> toHierarchicalList(List<FormSection> sections, Map<Object, List<FormSection>> parentToChildrenMap) {

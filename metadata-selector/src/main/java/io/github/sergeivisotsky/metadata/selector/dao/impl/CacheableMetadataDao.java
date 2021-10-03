@@ -29,7 +29,7 @@ import io.github.sergeivisotsky.metadata.selector.dao.keys.ViewMetadataCacheKey;
 import io.github.sergeivisotsky.metadata.selector.domain.BaseMetadata;
 import io.github.sergeivisotsky.metadata.selector.domain.ViewMetadata;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormMetadata;
-import io.github.sergeivisotsky.metadata.selector.exception.DataAccessException;
+import io.github.sergeivisotsky.metadata.selector.exception.MetadataStorageException;
 
 /**
  * @author Sergei Visotsky
@@ -59,7 +59,7 @@ public class CacheableMetadataDao implements ViewMetadataDao, FormMetadataDao {
             ViewMetadataCacheKey cacheKey = new ViewMetadataCacheKey(viewName, lang);
             return (ViewMetadata) cache.get(cacheKey, () -> viewMetadata.getViewMetadata(viewName, lang));
         } catch (ExecutionException e) {
-            throw new DataAccessException(e, "Unable to get a metadata from cache for " +
+            throw new MetadataStorageException(e, "Unable to get a metadata from cache for " +
                     "viewName={} with lang={}", viewName, lang);
         }
     }
@@ -70,7 +70,7 @@ public class CacheableMetadataDao implements ViewMetadataDao, FormMetadataDao {
             FormMetadataCacheKey cacheKey = new FormMetadataCacheKey(formName, lang);
             return (FormMetadata) cache.get(cacheKey, () -> formMetadataDao.getFormMetadata(formName, lang));
         } catch (ExecutionException e) {
-            throw new DataAccessException(e, "Unable to get a metadata from cache for " +
+            throw new MetadataStorageException(e, "Unable to get a metadata from cache for " +
                     "formName={} with lang={}", formName, lang);
         }
     }

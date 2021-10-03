@@ -21,9 +21,10 @@ import java.util.Map;
 import io.github.sergeivisotsky.metadata.selector.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.ComboBoxMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.LayoutMetadataDao;
-import io.github.sergeivisotsky.metadata.selector.dao.ViewMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.NavigationMetadataDao;
+import io.github.sergeivisotsky.metadata.selector.dao.ViewMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.domain.ViewMetadata;
+import io.github.sergeivisotsky.metadata.selector.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
 
 /**
@@ -51,19 +52,24 @@ public class ViewMetadataDaoImpl extends AbstractMetadataDao implements ViewMeta
      */
     @Override
     public ViewMetadata getViewMetadata(String viewName, String lang) {
-        Map<String, Object> params = Map.of(
-                "viewName", viewName,
-                "lang", lang
-        );
-        return jdbcTemplate.queryForObject(formMetadataMapper.getSql(), params,
-                (rs, index) -> {
-                    ViewMetadata metadata = formMetadataMapper.map(rs);
-                    metadata.setLayouts(layoutMetadataDao.getLayoutMetadata(viewName));
-                    metadata.setComboBoxes(comboBoxMetadataDao
-                            .getComboBoxesByFormMetadataId(rs.getLong("id")));
-                    metadata.setNavigation(navigationMetadataDao.getNavigationMetadata(viewName));
-                    return metadata;
-                });
+        try {
+            Map<String, Object> params = Map.of(
+                    "viewName", viewName,
+                    "lang", lang
+            );
+            return jdbcTemplate.queryForObject(formMetadataMapper.getSql(), params,
+                    (rs, index) -> {
+                        ViewMetadata metadata = formMetadataMapper.map(rs);
+                        metadata.setLayouts(layoutMetadataDao.getLayoutMetadata(viewName));
+                        metadata.setComboBoxes(comboBoxMetadataDao
+                                .getComboBoxesByFormMetadataId(rs.getLong("id")));
+                        metadata.setNavigation(navigationMetadataDao.getNavigationMetadata(viewName));
+                        return metadata;
+                    });
+        } catch (Exception e) {
+            throw new MetadataStorageException(e, "Failure to get view metadata with the following " +
+                    "parameters: viewName={} and lang={}", viewName, lang);
+        }
     }
 
 }
