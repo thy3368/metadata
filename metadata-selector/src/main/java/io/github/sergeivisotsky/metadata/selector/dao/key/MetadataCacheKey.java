@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.selector.dao.keys;
+package io.github.sergeivisotsky.metadata.selector.dao.key;
 
 /**
  * @author Sergei Visotsky
