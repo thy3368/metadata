@@ -23,7 +23,6 @@ import java.util.List;
  */
 public class ViewMetadata extends BaseMetadata {
 
-    private String cardinality;
     private Language lang;
     private String viewName;
     private Integer offset;
@@ -35,14 +34,6 @@ public class ViewMetadata extends BaseMetadata {
     private List<Layout> layouts;
     private List<ComboBox> comboBoxes;
     private Navigation navigation;
-
-    public String getCardinality() {
-        return cardinality;
-    }
-
-    public void setCardinality(String cardinality) {
-        this.cardinality = cardinality;
-    }
 
     public Language getLang() {
         return lang;

@@ -31,5 +31,8 @@
                                  referencedTableName="chart"
                                  referencedColumnNames="id"/>
     </changeSet>
+    <changeSet id="35" author="svisockis">
+        <dropColumn tableName="view_metadata" columnName="cardinality"/>
+    </changeSet>
 
 </databaseChangeLog>
