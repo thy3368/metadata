@@ -2,10 +2,10 @@
 
 ## 1.1.0
 ### Features
-* Chart metadata
+* /#30/ - Introduce charts metadata
 
 ### Improvements
-* Removed redundant cardinality field in ViewMetadata
+* /#35/ - Remove redundant cardinality field for a view metadata
 
 ## 1.0.0
 ### Features
