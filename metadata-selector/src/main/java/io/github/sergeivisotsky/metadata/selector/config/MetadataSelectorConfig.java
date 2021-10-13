@@ -25,6 +25,7 @@ import io.github.sergeivisotsky.metadata.selector.dao.LayoutMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.LookupMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.NavigationMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.ViewMetadataDao;
+import io.github.sergeivisotsky.metadata.selector.dao.ViewQueryDao;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.CacheableMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.ComboBoxMetadataDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.FormMetadataDaoImpl;
@@ -32,6 +33,7 @@ import io.github.sergeivisotsky.metadata.selector.dao.impl.LayoutMetadataDaoImpl
 import io.github.sergeivisotsky.metadata.selector.dao.impl.LookupMetadataDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.NavigationMetadataDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.dao.impl.ViewMetadataDaoImpl;
+import io.github.sergeivisotsky.metadata.selector.dao.impl.ViewQueryDaoImpl;
 import io.github.sergeivisotsky.metadata.selector.domain.ComboBox;
 import io.github.sergeivisotsky.metadata.selector.domain.Layout;
 import io.github.sergeivisotsky.metadata.selector.domain.LookupHolder;
@@ -44,6 +46,7 @@ import io.github.sergeivisotsky.metadata.selector.domain.form.FormMetadata;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormSection;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
 import io.github.sergeivisotsky.metadata.selector.mapper.ModelMapper;
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.SQLDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -104,5 +107,10 @@ public class MetadataSelectorConfig {
                                            MetadataMapper<FormField> formFieldMapper,
                                            ModelMapper<FormSection, FormSection> formSectionModelMapper) {
         return new FormMetadataDaoImpl(formMetadataMapper, formSectionMapper, formFieldMapper, formSectionModelMapper);
+    }
+
+    @Bean
+    public ViewQueryDao viewQueryDao(SQLDialect sqlDialect) {
+        return new ViewQueryDaoImpl(sqlDialect);
     }
 }
