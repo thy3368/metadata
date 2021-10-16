@@ -87,6 +87,12 @@ public class UrlViewQueryParser {
                 throw new UrlParseException("Parameter " + paramKey + " is null");
             }
 
+            // _ is a special character which is not used for
+            // the other operators not related to filtering.
+            if (StringUtils.startsWith(paramKey, "_")) {
+                continue;
+            }
+
             String paramName;
             FilterOperator operator;
 
@@ -97,12 +103,6 @@ public class UrlViewQueryParser {
             } else {
                 paramName = paramKey;
                 operator = FilterOperator.EQUALS;
-            }
-
-            // _ is a special character which is not used for
-            // the other operators not related to filtering.
-            if (StringUtils.contains(paramKey, "_")) {
-                continue;
             }
 
             ViewField field = getViewFieldByName(metadata, paramName);
