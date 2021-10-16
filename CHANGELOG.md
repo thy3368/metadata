@@ -10,8 +10,8 @@
 * [#35] - Remove redundant cardinality field for a view metadata
 
 ### Bug fixes
-* [46] - Filtering functionality lacks order list parsing logic
-* [48] - Generated query SQL is syntactically incorrect
+* [#46] - Filtering functionality lacks order list parsing logic
+* [#48] - Generated query SQL is syntactically incorrect
 
 ## 1.0.0
 ### Features
