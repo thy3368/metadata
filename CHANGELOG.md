@@ -12,6 +12,7 @@
 ### Bug fixes
 * [#46] - Filtering functionality lacks order list parsing logic
 * [#48] - Generated query SQL is syntactically incorrect
+* [#49] - Column names and aliases are always supposed to be uppercase
 
 ## 1.0.0
 ### Features

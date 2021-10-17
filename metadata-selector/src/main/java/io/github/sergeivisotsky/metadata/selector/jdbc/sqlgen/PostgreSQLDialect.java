@@ -188,7 +188,7 @@ public class PostgreSQLDialect implements SQLDialect {
 
     private String getSqlFilterColumnChecked(Map<String, String> fieldNameToFilterColumnMap,
                                              String attributeName) {
-        String sqlFilterColumn = fieldNameToFilterColumnMap.get(attributeName);
+        String sqlFilterColumn = fieldNameToFilterColumnMap.get(attributeName.toUpperCase());
         if (sqlFilterColumn == null) {
             throw new IllegalArgumentException("There is no applicable SQL query column for filter attribute " + attributeName);
         }
@@ -221,7 +221,7 @@ public class PostgreSQLDialect implements SQLDialect {
                 } else {
                     alias = StringUtils.substringAfterLast(item.getExpression(), ".");
                 }
-                resultMap.put(alias, item.getExpression());
+                resultMap.put(alias.toUpperCase(), item.getExpression());
             }
         }
         return resultMap;

@@ -71,7 +71,7 @@ public class UrlViewQueryParser {
                 .filter(parseFilter(metadata, params))
                 .offset(parseOffset(params))
                 .limit(parseLimit(params))
-                .orderList(parseSort(metadata, params))
+                .orderList(parseOrderList(metadata, params))
                 .build();
     }
 
@@ -197,18 +197,24 @@ public class UrlViewQueryParser {
         return Integer.parseInt(strArray[0]);
     }
 
-    public List<Order> parseSort(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
-        String[] strArray = params.get(SORT);
+    public List<Order> parseOrderList(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
+        String strSort = getAndValidateParam(params, SORT);
 
-        if (strArray == null) {
-            return null;
+        List<Order> orderList;
+        if (StringUtils.isNotEmpty(strSort)) {
+            orderList = parseSort(metadata, strSort);
+        } else {
+            orderList = List.of();
         }
-        if (strArray.length > 1) {
-            throw new UrlParseException("Only one _sort parameter allowed");
-        }
-        String sortExpr = strArray[0];
+        return orderList;
+    }
 
-        String[] splitResult = StringUtils.split(sortExpr, MULTI_VALUE_DELIMITER);
+    public List<Order> parseSort(ViewMetadata metadata, String strSort) throws UrlParseException {
+        // remove spaces if any
+        strSort = StringUtils.replace(strSort, " ", "");
+        strSort = strSort.toUpperCase();
+
+        String[] splitResult = StringUtils.split(strSort, MULTI_VALUE_DELIMITER);
 
         List<Order> result = new ArrayList<>();
         for (String order : splitResult) {
@@ -255,7 +261,7 @@ public class UrlViewQueryParser {
     private ViewField getViewFieldByName(ViewMetadata metadata, String fieldName) throws UrlParseException {
         return metadata.getViewField()
                 .stream()
-                .filter(field -> fieldName.equals(field.getName()))
+                .filter(field -> fieldName.equalsIgnoreCase(field.getName()))
                 .findFirst()
                 .orElseThrow(() -> new UrlParseException("Field " + fieldName +
                         " is not supported for a view " + metadata.getViewName()));
