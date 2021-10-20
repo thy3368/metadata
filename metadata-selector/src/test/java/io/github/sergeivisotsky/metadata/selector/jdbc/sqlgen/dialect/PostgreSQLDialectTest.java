@@ -103,7 +103,7 @@ public class PostgreSQLDialectTest {
                 "LEFT JOIN some_sample_table_two sstt\n" +
                 "ON sst.id = sstt.some_sample_table_one_id\n" +
                 "WHERE  AND (SST.COLUMN_ONE='someMysteriousValue') AND (SST.COLUMN_FOUR < someMask)\n" +
-                "ORDER BY null ASC\n" +
+                "ORDER BY null DESC\n" +
                 " OFFSET 3000 ROWS \n" +
                 " FETCH NEXT 3 ROWS ONLY";
 
