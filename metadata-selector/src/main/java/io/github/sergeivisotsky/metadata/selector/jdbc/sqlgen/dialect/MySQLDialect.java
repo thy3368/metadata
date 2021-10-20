@@ -16,8 +16,6 @@
 
 package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect;
 
-import java.util.Map;
-
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.ViewQuery;
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,15 +28,7 @@ public class MySQLDialect extends AbstractSQLDialect {
 
     @Override
     public String createSelectQuery(String sqlTemplate, ViewQuery query) {
-        String sql = sqlTemplate;
-
-        Map<String, String> fieldNameToFilterColumnMap = extractFilterColumnMap(sql);
-        String strFilter = createFilterClause(query.getFilter(), fieldNameToFilterColumnMap);
-        String strOrder = createOrderClause(query.getOrderList(), fieldNameToFilterColumnMap);
-
-        sql = StringUtils.replace(sql, "{filter}", " AND " + strFilter);
-        sql = StringUtils.replace(sql, "{filter}", "");
-        sql = StringUtils.replace(sql, "{order}", strOrder);
+        String sql = prepareSQL(sqlTemplate, query);
 
         String strLimit = "";
         if (query.getLimit() != null) {
@@ -50,8 +40,8 @@ public class MySQLDialect extends AbstractSQLDialect {
             strOffset = " OFFSET " + query.getOffset();
         }
 
-        sql = StringUtils.replace(sql, "{limit}", strLimit);
-        sql = StringUtils.replace(sql, "{offset}", strOffset);
+        sql = StringUtils.replace(sql, LIMIT_PLACEHOLDER, strLimit);
+        sql = StringUtils.replace(sql, OFFSET_PLACEHOLDER, strOffset);
 
         return sql;
     }

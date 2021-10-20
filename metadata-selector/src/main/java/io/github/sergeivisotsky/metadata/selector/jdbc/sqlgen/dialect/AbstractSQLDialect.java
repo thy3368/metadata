@@ -35,6 +35,7 @@ import io.github.sergeivisotsky.metadata.selector.filtering.dto.Filter;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.GreaterFilter;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.LessFilter;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.OrFilter;
+import io.github.sergeivisotsky.metadata.selector.filtering.dto.ViewQuery;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.DateFormatter;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.DateTimeFormatter;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.DecimalFormatter;
@@ -63,6 +64,11 @@ import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.TIME;
  * @author Sergei Visotsky
  */
 abstract class AbstractSQLDialect implements SQLDialect {
+
+    protected static final String FILTER_PLACEHOLDER = "{filter}";
+    protected static final String ORDER_PLACEHOLDER = "{order}";
+    protected static final String LIMIT_PLACEHOLDER = "{limit}";
+    protected static final String OFFSET_PLACEHOLDER = "{offset}";
 
     protected static final Map<FieldType, Formatter> FORMATTER_MAP = ImmutableMap.<FieldType, Formatter>builder()
             .put(TIME, new TimeFormatter())
@@ -94,6 +100,20 @@ abstract class AbstractSQLDialect implements SQLDialect {
         }
         throw new IllegalArgumentException("Field " + field.getName() +
                 " of type " + field.getFieldType() + " is not supported");
+    }
+
+    protected String prepareSQL(String sqlTemplate, ViewQuery query) {
+        String sql = sqlTemplate;
+
+        Map<String, String> fieldNameToFilterColumnMap = extractFilterColumnMap(sql);
+        String strFilter = createFilterClause(query.getFilter(), fieldNameToFilterColumnMap);
+        String strOrder = createOrderClause(query.getOrderList(), fieldNameToFilterColumnMap);
+
+        sql = StringUtils.replace(sql, FILTER_PLACEHOLDER, " AND " + strFilter);
+        sql = StringUtils.replace(sql, FILTER_PLACEHOLDER, "");
+        sql = StringUtils.replace(sql, ORDER_PLACEHOLDER, strOrder);
+
+        return sql;
     }
 
     protected String createFilterClause(Filter filter, Map<String, String> fieldNameToFilterColumnMap) {
