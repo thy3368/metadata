@@ -24,10 +24,10 @@ import org.apache.commons.lang3.StringUtils;
  *
  * @author Sergei Visotsky
  */
-public class OracleSQLDialect extends AbstractSQLDialect {
+public class MSSQLDialect extends AbstractSQLDialect {
 
     @Override
-    @SuppressWarnings("Duplicates") // really same as PostgreSQL in these terms,
+    @SuppressWarnings("Duplicates") // really same as an Oracle and PostgreSQL in these terms,
     // as SQL support will grow will need a custom Oracle specific things.
     public String createSelectQuery(String sqlTemplate, ViewQuery query) {
         String sql = prepareSQL(sqlTemplate, query);

@@ -27,6 +27,8 @@ import org.apache.commons.lang3.StringUtils;
 public class PostgreSQLDialect extends AbstractSQLDialect {
 
     @Override
+    @SuppressWarnings("Duplicates") // really same as an Oracle in these terms,
+    // as SQL support will grow will need a custom Oracle specific things.
     public String createSelectQuery(String sqlTemplate, ViewQuery query) {
         String sql = prepareSQL(sqlTemplate, query);
 
