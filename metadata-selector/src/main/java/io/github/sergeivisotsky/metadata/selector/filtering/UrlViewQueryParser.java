@@ -212,7 +212,6 @@ public class UrlViewQueryParser {
     public List<Order> parseSort(ViewMetadata metadata, String strSort) throws UrlParseException {
         // remove spaces if any
         strSort = StringUtils.replace(strSort, " ", "");
-        strSort = strSort.toUpperCase();
 
         String[] splitResult = StringUtils.split(strSort, MULTI_VALUE_DELIMITER);
 
