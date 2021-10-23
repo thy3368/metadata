@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.itest.dto;
+package io.github.sergeivisotsky.metadata.itest.config;
 
-import io.github.sergeivisotsky.metadata.selector.domain.LookupHolder;
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect.PostgreSQLDialect;
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect.SQLDialect;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Sergei Visotsky
  */
-public class ExtendedLookupHolder extends LookupHolder {
+@Configuration
+public class IntegrationTestConfig {
+
+    @Bean
+    public SQLDialect sqlDialect() {
+        return new PostgreSQLDialect();
+    }
 }
