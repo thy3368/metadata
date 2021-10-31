@@ -32,6 +32,12 @@ how database structure looks like.
 
 See how to get started on the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Get-started)
 
+## Metadata Query API
+Metadata query API documentation can be found on the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Metadata-Query-API)
+
+## Metadata Query API database structure
+Metadata query API database structure documentation can be found on the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Metadata-Query-API-database-structure)
+
 ## Contribution
 
 Contribution rules can be found on the following [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki/Contribution)
