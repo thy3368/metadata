@@ -17,11 +17,11 @@
 package io.github.sergeivisotsky.metadata.selector.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import io.github.sergeivisotsky.metadata.selector.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.dao.ViewQueryDao;
-import io.github.sergeivisotsky.metadata.selector.domain.Order;
 import io.github.sergeivisotsky.metadata.selector.domain.Paging;
 import io.github.sergeivisotsky.metadata.selector.domain.ViewField;
 import io.github.sergeivisotsky.metadata.selector.domain.ViewMetadata;
@@ -47,7 +47,8 @@ public class ViewQueryDaoImpl extends AbstractMetadataDao implements ViewQueryDa
     public ViewQueryResult query(ViewMetadata metadata, ViewQuery query) {
         String sqlTemplate = metadata.getDefinition();
 
-        String sql = sqlDialect.createSelectQuery(sqlTemplate, query);
+        ViewQuery plusOneRowQuery = query.plusOneRowQuery();
+        String sql = sqlDialect.createSelectQuery(sqlTemplate, plusOneRowQuery);
 
         List<ViewField> fieldList = metadata.getViewField();
         List<List<Object>> rowList = jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -59,14 +60,20 @@ public class ViewQueryDaoImpl extends AbstractMetadataDao implements ViewQueryDa
             return row;
         });
 
-        // TODO: Add total elements and plus one row.
+        boolean hasMoreElements = false;
+        if (plusOneRowQuery.getLimit() != null && rowList.size() == plusOneRowQuery.getLimit()) {
+            rowList.remove(rowList.size() - 1);
+            hasMoreElements = true;
+        }
 
         return ViewQueryResult.builder()
                 .fieldList(fieldList)
                 .rowList(rowList)
-                .orderList(query.getOrderList())
+                .orderList(plusOneRowQuery.getOrderList())
                 .paging(Paging.builder()
                         .offset(query.getOffset())
+                        .hasMoreElements(hasMoreElements)
+                        .totalElements(rowList.stream().mapToLong(Collection::size).sum())
                         .build())
                 .build();
     }
