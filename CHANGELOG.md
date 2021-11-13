@@ -4,6 +4,10 @@
 ### Features
 * [#60] - Add a support for hasMoreElements and totalElements and estimated elements
 
+## 1.1.2
+### Features
+* [#60 | BACKPORT] - Add a support for hasMoreElements and totalElements and estimated elements
+
 ## 1.1.1
 ### Bug fixes
 * [#54] - Queried view_field with name a_column_one does not exist
