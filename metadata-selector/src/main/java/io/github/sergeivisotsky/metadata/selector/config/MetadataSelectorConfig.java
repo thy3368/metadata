@@ -44,9 +44,9 @@ import io.github.sergeivisotsky.metadata.selector.domain.ViewMetadata;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormField;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormMetadata;
 import io.github.sergeivisotsky.metadata.selector.domain.form.FormSection;
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect.SQLDialect;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
 import io.github.sergeivisotsky.metadata.selector.mapper.ModelMapper;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect.SQLDialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -71,6 +71,7 @@ public class MetadataSelectorConfig {
     }
 
     @Bean("simpleMetadataDao")
+    @ConditionalOnMissingBean
     public ViewMetadataDao simpleMetadataDao(MetadataMapper<ViewField> viewFieldMetadataMapper,
                                              MetadataMapper<ViewMetadata> formMetadataMapper,
                                              ComboBoxMetadataDao comboBoxMetadataDao,
@@ -80,11 +81,13 @@ public class MetadataSelectorConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public LayoutMetadataDao layoutMetadataDao(MetadataMapper<Layout> layoutMapper) {
         return new LayoutMetadataDaoImpl(layoutMapper);
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ComboBoxMetadataDao comboBoxMetadataDao(MetadataMapper<ComboBox> comboBoxMapper) {
         return new ComboBoxMetadataDaoImpl(comboBoxMapper);
     }
@@ -97,11 +100,13 @@ public class MetadataSelectorConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public NavigationMetadataDao navigationMetadataDao(MetadataMapper<List<Navigation>> navigationMapper) {
         return new NavigationMetadataDaoImpl(navigationMapper);
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public FormMetadataDao formMetadataDao(MetadataMapper<FormMetadata> formMetadataMapper,
                                            MetadataMapper<FormSection> formSectionMapper,
                                            MetadataMapper<FormField> formFieldMapper,
@@ -110,6 +115,7 @@ public class MetadataSelectorConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public ViewQueryDao viewQueryDao(SQLDialect sqlDialect) {
         return new ViewQueryDaoImpl(sqlDialect);
     }

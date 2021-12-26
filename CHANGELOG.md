@@ -4,6 +4,9 @@
 ### Features
 * [#60] - Add a support for hasMoreElements and totalElements and estimated elements
 
+### Bug fixes
+* [#62] - Add missing conditional annotations for metadata provisioning beans
+
 ## 1.1.2
 ### Features
 * [#60 | BACKPORT] - Add a support for hasMoreElements and totalElements and estimated elements
