@@ -30,6 +30,7 @@ public class PrimitiveSelectParserTest {
 
     @Test
     public void shouldParseSelect() throws SQLParseException {
+        //given
         final String parseSelect = "SELECT t.some_first_column AS first,\n" +
                 "t.some_second_column AS second,\n" +
                 "st.first_column AS third\n" +
@@ -37,8 +38,10 @@ public class PrimitiveSelectParserTest {
                 "LEFT JOIN second_table st\n" +
                 "ON t.id = st.first_table_id";
 
+        //when
         Select select = selectParser.parseSelect(parseSelect);
 
+        //then
         SelectItem firstSelectItem = select.getSelectItemList().get(0);
         assertEquals("FIRST", firstSelectItem.getAlias());
         assertEquals("T.SOME_FIRST_COLUMN", firstSelectItem.getExpression());

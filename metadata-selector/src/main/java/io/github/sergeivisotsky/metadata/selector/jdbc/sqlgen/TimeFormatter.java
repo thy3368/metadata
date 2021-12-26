@@ -16,14 +16,34 @@
 
 package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen;
 
+import java.sql.Time;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import javax.annotation.Nonnull;
 
 /**
  * @author Sergei Visotsky
  */
 public class TimeFormatter implements Formatter {
+
     @Override
     public String formatWhereValue(@Nonnull Object value) {
-        return null;
+        return "to_char('" + formatTime(value) + "'::time,'HH:MI AM')";
+    }
+
+    private String formatTime(Object value) {
+        if (!(value instanceof Time)) {
+            throw new IllegalArgumentException("Formatter does not support " + value.getClass().getName()
+                    + " instead it supports java.sql.Time");
+        }
+
+        Time date = (Time) value;
+        LocalTime localDate = Instant.ofEpochMilli(date.getTime())
+                .atZone(ZoneId.of("UTC"))
+                .toLocalTime();
+        return Time.valueOf(localDate)
+                .toString()
+                .replaceAll(":", "");
     }
 }
