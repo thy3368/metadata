@@ -88,6 +88,7 @@ public class UrlViewQueryParserTest {
 
     @Test
     public void shouldConstructViewQueryWithBetweenAndFilters() throws UrlParseException {
+        //given
         Map<String, String[]> params = ImmutableMap.<String, String[]>builder()
                 .put("someField", new String[]{"value1"})
                 .put("fieldName2", new String[]{"value1"})
@@ -96,7 +97,11 @@ public class UrlViewQueryParserTest {
                 .put("_offset", new String[]{"200"})
                 .put("_limit", new String[]{"100"})
                 .build();
+
+        //when
         ViewQuery query = parser.constructViewQuery(metadata, params);
+
+        //then
         assertTrue(query.getFilter() instanceof AndFilter);
         assertTrue(((AndFilter) query.getFilter()).getLeftFilter() instanceof BetweenFilter);
         assertTrue(((AndFilter) query.getFilter()).getRightFilter() instanceof AndFilter);
@@ -110,6 +115,7 @@ public class UrlViewQueryParserTest {
 
     @Test
     public void shouldConstructViewQueryWithGreaterFilter() throws UrlParseException {
+        //given
         Map<String, String[]> params = ImmutableMap.<String, String[]>builder()
                 .put("someField", new String[]{"value1"})
                 .put("fieldName2", new String[]{"value1"})
@@ -118,7 +124,11 @@ public class UrlViewQueryParserTest {
                 .put("_offset", new String[]{"200"})
                 .put("_limit", new String[]{"100"})
                 .build();
+
+        //when
         ViewQuery query = parser.constructViewQuery(metadata, params);
+
+        //then
         assertTrue(query.getFilter() instanceof AndFilter);
         assertTrue(((AndFilter) query.getFilter()).getLeftFilter() instanceof GreaterFilter);
         assertTrue(((AndFilter) query.getFilter()).getRightFilter() instanceof AndFilter);
@@ -132,6 +142,7 @@ public class UrlViewQueryParserTest {
 
     @Test
     public void shouldConstructViewQueryWithLessFilter() throws UrlParseException {
+        //given
         Map<String, String[]> params = ImmutableMap.<String, String[]>builder()
                 .put("someField", new String[]{"value1"})
                 .put("fieldName2", new String[]{"value1"})
@@ -140,7 +151,11 @@ public class UrlViewQueryParserTest {
                 .put("_offset", new String[]{"200"})
                 .put("_limit", new String[]{"100"})
                 .build();
+
+        //when
         ViewQuery query = parser.constructViewQuery(metadata, params);
+
+        //then
         assertTrue(query.getFilter() instanceof AndFilter);
         assertTrue(((AndFilter) query.getFilter()).getLeftFilter() instanceof LessFilter);
         assertTrue(((AndFilter) query.getFilter()).getRightFilter() instanceof AndFilter);
@@ -154,6 +169,7 @@ public class UrlViewQueryParserTest {
 
     @Test
     public void shouldConstructViewQueryWithLikeFilter() throws UrlParseException {
+        //given
         Map<String, String[]> params = ImmutableMap.<String, String[]>builder()
                 .put("someField", new String[]{"value1"})
                 .put("fieldName2", new String[]{"value1"})
@@ -162,7 +178,11 @@ public class UrlViewQueryParserTest {
                 .put("_offset", new String[]{"200"})
                 .put("_limit", new String[]{"100"})
                 .build();
+
+        //when
         ViewQuery query = parser.constructViewQuery(metadata, params);
+
+        //then
         assertTrue(query.getFilter() instanceof AndFilter);
         assertTrue(((AndFilter) query.getFilter()).getLeftFilter() instanceof LikeFilter);
         assertTrue(((AndFilter) query.getFilter()).getRightFilter() instanceof AndFilter);
@@ -176,6 +196,7 @@ public class UrlViewQueryParserTest {
 
     @Test(expected = UrlParseException.class)
     public void shouldConstructViewQueryThrowUrlParseException() throws UrlParseException {
+        //given
         Map<String, String[]> params = ImmutableMap.<String, String[]>builder()
                 .put("someField", new String[]{"value1"})
                 .put("fieldName2", new String[]{"value1"})
@@ -184,7 +205,11 @@ public class UrlViewQueryParserTest {
                 .put("_offset", new String[]{"200"})
                 .put("_limit", new String[]{"100"})
                 .build();
+
+        //when
         ViewQuery query = parser.constructViewQuery(metadata, params);
+
+        //then
         assertTrue(query.getFilter() instanceof AndFilter);
         assertTrue(((AndFilter) query.getFilter()).getLeftFilter() instanceof LikeFilter);
         assertTrue(((AndFilter) query.getFilter()).getRightFilter() instanceof AndFilter);

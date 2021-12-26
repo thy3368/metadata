@@ -21,6 +21,7 @@ import java.util.List;
 import io.github.sergeivisotsky.metadata.selector.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.selector.domain.LookupHolder;
 import io.github.sergeivisotsky.metadata.selector.domain.LookupMetadata;
+import io.github.sergeivisotsky.metadata.selector.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.selector.mapper.MetadataMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +63,7 @@ public class LookupMetadataDaoImplTest extends AbstractMetadataDao {
 
     @Test
     public void shouldGetLookupMetadata() {
+        //given
         LookupHolder lookupHolder = new LookupHolder();
         lookupHolder.setName("someHolder");
         lookupHolder.setWeight(300);
@@ -71,9 +73,26 @@ public class LookupMetadataDaoImplTest extends AbstractMetadataDao {
         when(lookupHolderMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
         when(jdbcTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class))).thenReturn(lookupHolder);
 
+        //when
         dao.getLookupMetadata("someLookup", "en");
 
-        verify(lookupHolderMapper).getSql();
+        //then
         verify(jdbcTemplate).queryForObject(anyString(), anyMap(), any(RowMapper.class));
+    }
+
+    @Test(expected = MetadataStorageException.class)
+    public void shouldThrowMetadataStorageException() {
+        //given
+        LookupHolder lookupHolder = new LookupHolder();
+        lookupHolder.setName("someHolder");
+        lookupHolder.setWeight(300);
+        lookupHolder.setHeight(20);
+        lookupHolder.setMetadata(List.of());
+
+        when(lookupHolderMapper.getSql()).thenThrow(MetadataStorageException.class);
+        when(jdbcTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class))).thenReturn(lookupHolder);
+
+        //when
+        dao.getLookupMetadata("someLookup", "en");
     }
 }

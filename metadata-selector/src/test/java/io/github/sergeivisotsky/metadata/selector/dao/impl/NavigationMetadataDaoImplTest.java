@@ -61,6 +61,7 @@ public class NavigationMetadataDaoImplTest extends AbstractMetadataDao {
 
     @Test
     public void shouldGetNavigationMetadata() {
+        //given
         Navigation navigation = new Navigation();
         navigation.setType(NavigationType.NAV_BAR);
         navigation.setResizable(false);
@@ -79,8 +80,10 @@ public class NavigationMetadataDaoImplTest extends AbstractMetadataDao {
         when(jdbcTemplate.queryForObject(anyString(), anyMap(), eq(RowMapper.class)))
                 .thenReturn((rs, rowNum) -> navigation);
 
+        //when
         dao.getNavigationMetadata("someView");
 
+        //then
         verify(navigationMapper).getSql();
         verify(jdbcTemplate).queryForObject(any(), anyMap(), any(RowMapper.class));
     }

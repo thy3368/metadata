@@ -1,7 +1,11 @@
 # Changelog
 
+### 1.1.2
+### Bug fixes
+* [#63] - Add missing time formatter realization
+
 ## 1.1.1
-### Buf fixes
+### Bug fixes
 * [#54] - Queried view_field with name a_column_one does not exist
 * [#55] - ui_description column does not allow to insert value which length is more than 25 characters
 * [#56] - SQL syntax exception when query API is executed

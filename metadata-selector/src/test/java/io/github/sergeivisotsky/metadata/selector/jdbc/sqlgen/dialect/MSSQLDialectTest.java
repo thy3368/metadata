@@ -72,6 +72,7 @@ public class MSSQLDialectTest {
 
     @Test
     public void shouldCreateSelectQuery() {
+        //given
         ViewQuery viewQuery = ViewQuery.builder()
                 .orderList(List.of(new Order("someField", ASC)))
                 .orderList(List.of(new Order("some_value", DESC)))
@@ -82,8 +83,10 @@ public class MSSQLDialectTest {
                 .offset(3000L)
                 .build();
 
+        //when
         String result = dialect.createSelectQuery(QUERY, viewQuery);
 
+        //then
         final String expectedSQL = "SELECT sst.column_one,\n" +
                 "sst.column_two,\n" +
                 "sst.column_three,\n" +
@@ -101,7 +104,7 @@ public class MSSQLDialectTest {
                 "FROM some_sample_table sst\n" +
                 "LEFT JOIN some_sample_table_two sstt\n" +
                 "ON sst.id = sstt.some_sample_table_one_id\n" +
-                "WHERE  AND (SST.COLUMN_ONE='someMysteriousValue') AND (SST.COLUMN_FOUR < someMask)\n" +
+                "WHERE (SST.COLUMN_ONE='someMysteriousValue') AND (SST.COLUMN_FOUR < someMask)\n" +
                 "ORDER BY null DESC\n" +
                 " OFFSET 3000 ROWS \n" +
                 " FETCH NEXT 3 ROWS ONLY";
