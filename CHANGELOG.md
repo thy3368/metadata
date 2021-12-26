@@ -1,8 +1,12 @@
 # Changelog
 
-### 1.1.2
+### 1.1.3
 ### Bug fixes
 * [#63] - Add missing time formatter realization
+
+## 1.1.2
+### Features
+* [#60 | BACKPORT] - Add a support for hasMoreElements and totalElements and estimated elements
 
 ## 1.1.1
 ### Bug fixes
