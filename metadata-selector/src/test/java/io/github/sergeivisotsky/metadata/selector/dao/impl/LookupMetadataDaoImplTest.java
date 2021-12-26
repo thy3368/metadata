@@ -71,13 +71,13 @@ public class LookupMetadataDaoImplTest extends AbstractMetadataDao {
         lookupHolder.setMetadata(List.of());
 
         when(lookupHolderMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
-        when(jdbcTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class))).thenReturn(lookupHolder);
+        when(jdbcTemplate.queryForObject(any(), anyMap(), any(RowMapper.class))).thenReturn(lookupHolder);
 
         //when
         dao.getLookupMetadata("someLookup", "en");
 
         //then
-        verify(jdbcTemplate).queryForObject(anyString(), anyMap(), any(RowMapper.class));
+        verify(jdbcTemplate).queryForObject(any(), anyMap(), any(RowMapper.class));
     }
 
     @Test(expected = MetadataStorageException.class)
