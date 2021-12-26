@@ -22,6 +22,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Unit test for {@link TimeFormatter}.
+ *
+ * @author Sergei Visotsky
+ */
 public class TimeFormatterTest {
 
     private final Formatter formatter = new TimeFormatter();

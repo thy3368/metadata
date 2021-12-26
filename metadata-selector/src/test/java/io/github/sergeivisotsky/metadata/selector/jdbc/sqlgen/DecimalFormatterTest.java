@@ -22,6 +22,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Unit test for {@link DecimalFormatter}.
+ *
+ * @author Sergei Visotsky
+ */
 public class DecimalFormatterTest {
 
     private final Formatter formatter = new DecimalFormatter();

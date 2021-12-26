@@ -22,6 +22,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Unit test for {@link DateFormatter}.
+ *
+ * @author Sergei Visotsky
+ */
 public class DateFormatterTest {
 
     private final Formatter formatter = new DateFormatter();

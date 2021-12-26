@@ -20,6 +20,11 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Unit test for {@link StringFormatter}.
+ *
+ * @author Sergei Visotsky
+ */
 public class StringFormatterTest {
 
     private final Formatter formatter = new StringFormatter();
