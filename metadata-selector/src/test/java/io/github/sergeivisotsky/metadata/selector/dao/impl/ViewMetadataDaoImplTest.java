@@ -73,6 +73,7 @@ public class ViewMetadataDaoImplTest extends AbstractMetadataDao {
 
     @Test
     public void shouldGetFormMetadata() {
+        //given
         ViewMetadata metadata = new ViewMetadata();
         metadata.setFont("Times New Roman");
         metadata.setDescription("some description");
@@ -84,9 +85,10 @@ public class ViewMetadataDaoImplTest extends AbstractMetadataDao {
         when(comboBoxMetadataDao.getComboBoxesByFormMetadataId(anyLong())).thenReturn(List.of());
         when(jdbcTemplate.queryForObject(anyString(), anyMap(), eq(RowMapper.class))).thenReturn((rs, rowNum) -> metadata);
 
+        //when
         dao.getViewMetadata("main", "en");
 
-        verify(formMetadataMapper).getSql();
+        //then
         verify(jdbcTemplate).queryForObject(any(), anyMap(), any(RowMapper.class));
     }
 }

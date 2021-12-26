@@ -92,11 +92,14 @@ public class ComboBoxMetadataDaoImplTest extends AbstractMetadataDao {
 
     @Test
     public void shouldGetComboBoxesByFormMetadataId() {
+        //given
         when(comboBoxMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
         when(jdbcTemplate.query(anyString(), anyMap(), any(RowMapper.class))).thenReturn(comboBoxes);
 
+        //when
         List<ComboBox> combos = dao.getComboBoxesByFormMetadataId(1L);
 
+        //then
         assertEquals(1, combos.size());
         assertNotEquals(0, combos.get(0).getComboContent().size());
         verify(comboBoxMapper).getSql();
@@ -105,8 +108,10 @@ public class ComboBoxMetadataDaoImplTest extends AbstractMetadataDao {
 
     @Test
     public void shouldNormalizeCombos() {
+        //when
         List<ComboBox> resultCombos = dao.normalizeCombos(comboBoxes);
 
+        //then
         assertEquals(1, resultCombos.size());
         assertEquals(3, resultCombos.get(0).getComboContent().size());
     }

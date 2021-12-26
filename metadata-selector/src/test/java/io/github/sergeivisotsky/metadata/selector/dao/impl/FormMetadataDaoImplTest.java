@@ -64,12 +64,15 @@ public class FormMetadataDaoImplTest extends AbstractMetadataDao {
 
     @Test
     public void shouldGetFormMetadata() {
+        //given
         when(formMetadataMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
         when(formSectionMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
         when(formFieldMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
 
+        //when
         dao.getFormMetadata("someForm", "EN");
 
+        //then
         verify(jdbcTemplate).queryForObject(anyString(), anyMap(), any(RowMapper.class));
     }
 }
