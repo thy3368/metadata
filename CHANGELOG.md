@@ -8,7 +8,7 @@
 * [#62] - Add missing conditional annotations for metadata provisioning beans
 * [#63] - Add missing time formatter realization
 
-### 1.1.3
+## 1.1.3
 ### Bug fixes
 * [#63 | BACKPORT] - Add missing time formatter realization
 
