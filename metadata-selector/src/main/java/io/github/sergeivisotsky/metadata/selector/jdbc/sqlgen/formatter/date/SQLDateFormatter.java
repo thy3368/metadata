@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen;
+package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.date;
 
 import javax.annotation.Nonnull;
 
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.SQLFormatter;
+
+import static io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.TimeUnitFormatter.formatDate;
+
 /**
+ * Wraps a date to Oracle and PostgreSQL to_date() function.
+ *
  * @author Sergei Visotsky
  */
-public class IntegerFormatter implements Formatter {
+public class SQLDateFormatter implements SQLFormatter {
 
     @Override
     public String formatWhereValue(@Nonnull Object value) {
-        return value.toString();
+        return "TO_DATE('" + formatDate(value) + "','YYYY-MM-DD')";
     }
 }

@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen;
+package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.time;
+
+import javax.annotation.Nonnull;
+
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.SQLFormatter;
+
+import static io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.TimeUnitFormatter.formatTime;
 
 /**
- * Formatter to execute a typed value formatting depending on WHERE clause needs.
+ * Oracle and PostgreSQL time formatter.
  *
  * @author Sergei Visotsky
  */
-public interface Formatter {
+public class SQLTimeFormatter implements SQLFormatter {
 
-    /**
-     * Executes the main WHERE clause value formatting.
-     *
-     * @param value the value to be formatted.
-     * @return formatted WHERE clause value.
-     */
-    String formatWhereValue(Object value);
+    @Override
+    public String formatWhereValue(@Nonnull Object value) {
+        return "TO_CHAR('" + formatTime(value) + "'::time,'HH:MI AM')";
+    }
 }

@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen;
+package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.datetime;
 
 import javax.annotation.Nonnull;
 
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.SQLFormatter;
+
+import static io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.TimeUnitFormatter.formatDateTime;
+
 /**
+ * MySQL's dialect date and time formatter.
+ *
  * @author Sergei Visotsky
  */
-public class StringFormatter implements Formatter {
+public class MySQLDateTimeFormatter implements SQLFormatter {
 
     @Override
     public String formatWhereValue(@Nonnull Object value) {
-        return "'" + value + "'";
+        return "STR_TO_DATE(" + formatDateTime(value) + "', '%Y-%m-%d %H:%i:%s')";
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 the original author or authors.
+ * Copyright 2022 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,42 +14,42 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen;
+package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.date;
 
-import java.sql.Time;
+import java.util.Date;
 
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.SQLFormatter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Unit test for {@link TimeFormatter}.
+ * Unit test for {@link MSSQLDateFormatter}.
  *
  * @author Sergei Visotsky
  */
-public class TimeFormatterTest {
+public class MSSQLDateFormatterTest {
 
-    private final Formatter formatter = new TimeFormatter();
+    private final SQLFormatter formatter = new MSSQLDateFormatter();
 
     @Test
-    public void shouldFormatWhereValueWithTimeProperly() {
+    public void shouldFormatWhereValueWithDateProperly() {
         //given
-        final String timeAsString = "12:00:03";
+        final Date date = new Date(19700102);
 
         //when
-        String result = formatter.formatWhereValue(Time.valueOf(timeAsString));
+        String result = formatter.formatWhereValue(date);
 
         //then
-        assertEquals("to_char('110003'::time,'HH:MI AM')", result);
+        assertEquals("CONVERT(VARCHAR(10), '1970-01-01', 32)", result);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldFailWithIllegalArgumentExceptionException() {
+    public void shouldFailWithIllegalArgumentException() {
         //given
-        final String timeAsString = "12:00:03";
+        final String date = "19700102";
 
         //when
-        formatter.formatWhereValue(timeAsString);
-
+        formatter.formatWhereValue(date);
     }
 }

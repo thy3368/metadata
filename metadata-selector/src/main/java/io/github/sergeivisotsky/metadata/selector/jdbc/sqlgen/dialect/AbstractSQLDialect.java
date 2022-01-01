@@ -16,13 +16,6 @@
 
 package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.common.collect.ImmutableMap;
 import io.github.sergeivisotsky.metadata.selector.domain.FieldType;
 import io.github.sergeivisotsky.metadata.selector.domain.Order;
 import io.github.sergeivisotsky.metadata.selector.domain.ViewField;
@@ -36,13 +29,7 @@ import io.github.sergeivisotsky.metadata.selector.filtering.dto.GreaterFilter;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.LessFilter;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.OrFilter;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.ViewQuery;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.DateFormatter;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.DateTimeFormatter;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.DecimalFormatter;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.Formatter;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.IntegerFormatter;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.StringFormatter;
-import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.TimeFormatter;
+import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.SQLFormatter;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlparser.SQLParseException;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlparser.Select;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlparser.SelectItem;
@@ -50,12 +37,11 @@ import io.github.sergeivisotsky.metadata.selector.jdbc.sqlparser.SelectParser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.DATE;
-import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.DATETIME;
-import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.DECIMAL;
-import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.INTEGER;
-import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.STRING;
-import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.TIME;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * An abstract implementation of an SQL dialect which aimed
@@ -70,14 +56,11 @@ abstract class AbstractSQLDialect implements SQLDialect {
     protected static final String LIMIT_PLACEHOLDER = "{limit}";
     protected static final String OFFSET_PLACEHOLDER = "{offset}";
 
-    protected static final Map<FieldType, Formatter> FORMATTER_MAP = ImmutableMap.<FieldType, Formatter>builder()
-            .put(TIME, new TimeFormatter())
-            .put(DATETIME, new DateTimeFormatter())
-            .put(DATE, new DateFormatter())
-            .put(INTEGER, new IntegerFormatter())
-            .put(STRING, new StringFormatter())
-            .put(DECIMAL, new DecimalFormatter())
-            .build();
+    private Map<FieldType, SQLFormatter> formatterMap;
+
+    public AbstractSQLDialect(Map<FieldType, SQLFormatter> formatterMap) {
+        this.formatterMap = formatterMap;
+    }
 
     protected SelectParser selectParser;
 
@@ -181,7 +164,7 @@ abstract class AbstractSQLDialect implements SQLDialect {
     }
 
     protected String formatWhereValue(FieldType fieldType, Object value) {
-        Formatter formatter = FORMATTER_MAP.get(fieldType);
+        SQLFormatter formatter = formatterMap.get(fieldType);
         return formatter.formatWhereValue(value);
     }
 
