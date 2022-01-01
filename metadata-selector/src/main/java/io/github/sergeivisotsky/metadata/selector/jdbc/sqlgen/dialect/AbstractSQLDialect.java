@@ -16,6 +16,12 @@
 
 package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.github.sergeivisotsky.metadata.selector.domain.FieldType;
 import io.github.sergeivisotsky.metadata.selector.domain.Order;
 import io.github.sergeivisotsky.metadata.selector.domain.ViewField;
@@ -36,12 +42,6 @@ import io.github.sergeivisotsky.metadata.selector.jdbc.sqlparser.SelectItem;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlparser.SelectParser;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * An abstract implementation of an SQL dialect which aimed

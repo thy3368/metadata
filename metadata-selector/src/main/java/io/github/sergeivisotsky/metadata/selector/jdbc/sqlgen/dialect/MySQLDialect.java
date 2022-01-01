@@ -16,6 +16,8 @@
 
 package io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.dialect;
 
+import java.util.Map;
+
 import com.google.common.collect.ImmutableMap;
 import io.github.sergeivisotsky.metadata.selector.domain.FieldType;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.ViewQuery;
@@ -27,8 +29,6 @@ import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.date.MyS
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.datetime.MySQLDateTimeFormatter;
 import io.github.sergeivisotsky.metadata.selector.jdbc.sqlgen.formatter.time.MySQLTimeFormatter;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.Map;
 
 import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.DATE;
 import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.DATETIME;
