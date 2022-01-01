@@ -56,7 +56,7 @@ abstract class AbstractSQLDialect implements SQLDialect {
     protected static final String LIMIT_PLACEHOLDER = "{limit}";
     protected static final String OFFSET_PLACEHOLDER = "{offset}";
 
-    private Map<FieldType, SQLFormatter> formatterMap;
+    private final Map<FieldType, SQLFormatter> formatterMap;
 
     public AbstractSQLDialect(Map<FieldType, SQLFormatter> formatterMap) {
         this.formatterMap = formatterMap;
