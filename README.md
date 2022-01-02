@@ -1,5 +1,5 @@
 # UI metadata provider
-A UI metadata provider is a library to build a metadata driven UI.
+A UI metadata provider is a framework to build a metadata driven UI.
 
 ## Description
 See a description Home [Wiki page](https://github.com/sergeivisotsky/metadata-provider/wiki)
