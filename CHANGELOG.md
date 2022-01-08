@@ -9,6 +9,10 @@
 * [#62] - Add missing conditional annotations for metadata provisioning beans
 * [#63] - Add missing time formatter realization
 
+## 1.1.4
+### Vulnerability fixes
+* [#70 | BACKPORT] - Eliminate CVE-2020-8908 produced by Guava
+
 ## 1.1.3
 ### Bug fixes
 * [#63 | BACKPORT] - Add missing time formatter realization
