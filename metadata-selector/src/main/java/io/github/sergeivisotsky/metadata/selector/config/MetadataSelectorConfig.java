@@ -63,7 +63,6 @@ import org.springframework.context.annotation.Configuration;
 public class MetadataSelectorConfig {
 
     @Bean
-    @ConditionalOnMissingBean
     public ViewMetadataDao metadataDao(@Qualifier("simpleMetadataDao") ViewMetadataDao viewMetadataDao,
                                        FormMetadataDao formMetadataDao,
                                        CacheConfigProperties cacheConfigProperties) {
@@ -71,7 +70,6 @@ public class MetadataSelectorConfig {
     }
 
     @Bean("simpleMetadataDao")
-    @ConditionalOnMissingBean
     public ViewMetadataDao simpleMetadataDao(MetadataMapper<ViewField> viewFieldMetadataMapper,
                                              MetadataMapper<ViewMetadata> formMetadataMapper,
                                              ComboBoxMetadataDao comboBoxMetadataDao,
