@@ -4,6 +4,7 @@
 ### Features
 * [#60] - Add a support for hasMoreElements and totalElements and estimated elements
 * [#68] - Adopt each SQL generation formatter for every database currently supported
+* [#68] - Upgrade JDK up to 17 and Spring up to 2.6.2
 
 ### Bug fixes
 * [#62] - Add missing conditional annotations for metadata provisioning beans
