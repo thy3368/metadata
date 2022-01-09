@@ -4,11 +4,15 @@
 ### Features
 * [#60] - Add a support for hasMoreElements and totalElements and estimated elements
 * [#68] - Adopt each SQL generation formatter for every database currently supported
-* [#68] - Upgrade JDK up to 17 and Spring up to 2.6.2
+* [#72] - Upgrade JDK up to 17 and Spring up to 2.6.2
+* [#73] - Make SQL dialect activation by property
 
 ### Bug fixes
 * [#62] - Add missing conditional annotations for metadata provisioning beans
 * [#63] - Add missing time formatter realization
+
+### Vulnerability fixes
+* [#70] - Eliminate CVE-2020-8908 produced by Guava
 
 ## 1.1.4
 ### Vulnerability fixes

@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "datasource.sqlDialect",
+      "type": "java.lang.String",
+      "description": "Defines which SQL dialect should be used."
+    }
+  ]
+}
