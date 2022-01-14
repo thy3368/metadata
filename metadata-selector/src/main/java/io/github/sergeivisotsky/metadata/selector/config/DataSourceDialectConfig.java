@@ -35,7 +35,7 @@ public class DataSourceDialectConfig {
     @Bean
     @ConditionalOnProperty(
             prefix = "datasource",
-            name = "sqlDialect",
+            name = "sql-dialect",
             havingValue = "oracle"
     )
     public SQLDialect oracleSqlDialect() {
@@ -45,7 +45,7 @@ public class DataSourceDialectConfig {
     @Bean
     @ConditionalOnProperty(
             prefix = "datasource",
-            name = "sqlDialect",
+            name = "sql-dialect",
             havingValue = "postgresql"
     )
     public SQLDialect postgreSqlDialect() {
@@ -55,7 +55,7 @@ public class DataSourceDialectConfig {
     @Bean
     @ConditionalOnProperty(
             prefix = "datasource",
-            name = "sqlDialect",
+            name = "sql-dialect",
             havingValue = "mssql"
     )
     public SQLDialect msSqlDialect() {
@@ -65,7 +65,7 @@ public class DataSourceDialectConfig {
     @Bean
     @ConditionalOnProperty(
             prefix = "datasource",
-            name = "sqlDialect",
+            name = "sql-dialect",
             havingValue = "mysql"
     )
     public SQLDialect mySqlDialect() {
