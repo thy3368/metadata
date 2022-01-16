@@ -7,6 +7,7 @@
 * [#72] - Upgrade JDK up to 17 and Spring up to 2.6.2
 * [#73] - Make SQL dialect activation by property
 * [#75] - Initialise chart metadata beans by a single property using @ConditionalOnProperty
+* [#77] - Restructure Liquibase scripts so that Chart metadata related schema be included/excluded when needed
 
 ### Bug fixes
 * [#62] - Add missing conditional annotations for metadata provisioning beans
