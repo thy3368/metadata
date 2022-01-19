@@ -28,12 +28,6 @@
         </profile>
     </profiles>
 
-    <scm>
-        <url>https://github.com/sergeivisotsky/metadata-provider</url>
-        <connection>git://github.com/sergeivisotsky/metadata-provider.git</connection>
-        <developerConnection>git@github.com:sergeivisotsky/metadata-provider.git</developerConnection>
-    </scm>
-
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -41,6 +35,18 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <scm>
+        <url>https://github.com/sergeivisotsky/metadata-provider</url>
+        <connection>git://github.com/sergeivisotsky/metadata-provider.git</connection>
+        <developerConnection>git@github.com:sergeivisotsky/metadata-provider.git</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <id>svisockis</id>
+            <name>Sergei Visotsky</name>
+            <email>sergei.visotsky@gmail.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <revision>1.2.0-SNAPSHOT</revision>
