@@ -44,12 +44,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * An abstract implementation of an SQL dialect which aimed
- * to hold a methods specific for all dialect.
+ * Base implementation of an SQL dialect which aimed
+ * to hold a methods specific for all dialects.
  *
  * @author Sergei Visotsky
  */
-abstract class AbstractSQLDialect implements SQLDialect {
+abstract class BaseSQLDialect implements SQLDialect {
 
     protected static final String FILTER_PLACEHOLDER = "{filter}";
     protected static final String ORDER_PLACEHOLDER = "{order}";
@@ -58,7 +58,7 @@ abstract class AbstractSQLDialect implements SQLDialect {
 
     private final Map<FieldType, SQLFormatter> formatterMap;
 
-    public AbstractSQLDialect(Map<FieldType, SQLFormatter> formatterMap) {
+    public BaseSQLDialect(Map<FieldType, SQLFormatter> formatterMap) {
         this.formatterMap = formatterMap;
     }
 

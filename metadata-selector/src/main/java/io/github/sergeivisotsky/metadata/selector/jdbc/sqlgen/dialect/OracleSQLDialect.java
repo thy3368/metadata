@@ -42,7 +42,7 @@ import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.TIME;
  *
  * @author Sergei Visotsky
  */
-public class OracleSQLDialect extends AbstractSQLDialect {
+public class OracleSQLDialect extends BaseSQLDialect {
 
     private static final Map<FieldType, SQLFormatter> FORMATTER_MAP = ImmutableMap.<FieldType, SQLFormatter>builder()
             .put(TIME, new SQLTimeFormatter())

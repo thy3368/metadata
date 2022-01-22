@@ -42,7 +42,7 @@ import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.TIME;
  *
  * @author Sergei Visotsky
  */
-public class MSSQLDialect extends AbstractSQLDialect {
+public class MSSQLDialect extends BaseSQLDialect {
 
     private static final Map<FieldType, SQLFormatter> FORMATTER_MAP = ImmutableMap.<FieldType, SQLFormatter>builder()
             .put(TIME, new MSSQLTimeFormatter())

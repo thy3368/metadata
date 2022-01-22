@@ -42,7 +42,7 @@ import static io.github.sergeivisotsky.metadata.selector.domain.FieldType.TIME;
  *
  * @author Sergei Visotsky
  */
-public class PostgreSQLDialect extends AbstractSQLDialect {
+public class PostgreSQLDialect extends BaseSQLDialect {
 
     private static final Map<FieldType, SQLFormatter> FORMATTER_MAP = ImmutableMap.<FieldType, SQLFormatter>builder()
             .put(TIME, new SQLTimeFormatter())
@@ -59,7 +59,7 @@ public class PostgreSQLDialect extends AbstractSQLDialect {
 
     @Override
     @SuppressWarnings("Duplicates") // really same as an Oracle in these terms,
-    // as SQL support will grow will need a custom Oracle specific things.
+    // as SQL support will grow will need a custom PostgreSQL specific things.
     public String createSelectQuery(String sqlTemplate, ViewQuery query) {
         String sql = prepareSQL(sqlTemplate, query);
 
