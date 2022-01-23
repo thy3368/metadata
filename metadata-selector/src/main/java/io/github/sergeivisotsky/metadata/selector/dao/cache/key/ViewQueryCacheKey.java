@@ -20,7 +20,7 @@ import java.util.Objects;
 import io.github.sergeivisotsky.metadata.selector.filtering.dto.ViewQuery;
 
 /**
- * Query ache key.
+ * View Query cache key.
  *
  * @author Sergei Visotsky
  */
