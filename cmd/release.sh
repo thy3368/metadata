@@ -23,7 +23,6 @@ if [ "$1" == "patch" ]; then
   git push origin v"$2"
 fi
 
-
 if [ "$1" == "snapshot" ]; then
   mvn clean install
   mvn deploy
