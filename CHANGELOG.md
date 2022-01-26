@@ -4,7 +4,6 @@
 ### Features
 * [#81] - Improve cache & introduce such for query API
 * [#83] - Migrate JUnit 4 -> JUnit 5
-* [#89] - Exclude not needed Spring Boot auto-configuration
 
 ## 1.2.1
 ### Miscellaneous
