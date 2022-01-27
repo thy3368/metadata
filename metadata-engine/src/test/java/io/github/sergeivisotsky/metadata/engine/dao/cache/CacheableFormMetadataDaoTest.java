@@ -3,7 +3,6 @@ package io.github.sergeivisotsky.metadata.engine.dao.cache;
 import java.util.concurrent.TimeUnit;
 
 import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.dao.FormMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.domain.form.FormMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +25,6 @@ class CacheableFormMetadataDaoTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        RootCacheConfigProperties rootCacheProps = new RootCacheConfigProperties();
 
         CacheConfigProperties cacheProps = new CacheConfigProperties();
         cacheProps.setExpireAfterAccess(123);
@@ -34,9 +32,7 @@ class CacheableFormMetadataDaoTest {
         cacheProps.setInitialCapacity(13);
         cacheProps.setExpirationAfterAccessUnits(TimeUnit.HOURS);
 
-        rootCacheProps.setForm(cacheProps);
-
-        cacheableFormMetadataDao = new CacheableFormMetadataDao(formMetadataDao, rootCacheProps);
+        cacheableFormMetadataDao = new CacheableFormMetadataDao(formMetadataDao, cacheProps);
     }
 
     @Test

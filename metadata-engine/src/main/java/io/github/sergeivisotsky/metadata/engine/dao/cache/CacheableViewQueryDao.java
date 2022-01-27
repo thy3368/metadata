@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.dao.ViewQueryDao;
 import io.github.sergeivisotsky.metadata.engine.dao.cache.key.ViewQueryCacheKey;
 import io.github.sergeivisotsky.metadata.engine.domain.ViewMetadata;
@@ -38,14 +37,13 @@ public class CacheableViewQueryDao implements ViewQueryDao {
     private final Cache<ViewQueryCacheKey, ViewQueryResult> cache;
     private final ViewQueryDao queryDao;
 
-    public CacheableViewQueryDao(ViewQueryDao queryDao, RootCacheConfigProperties cacheConfigProperties) {
+    public CacheableViewQueryDao(ViewQueryDao queryDao, CacheConfigProperties queryCacheProperties) {
         this.queryDao = queryDao;
-        CacheConfigProperties queryProperties = cacheConfigProperties.getQuery();
         cache = CacheBuilder.newBuilder()
-                .initialCapacity(queryProperties.getInitialCapacity())
-                .maximumSize(queryProperties.getMaximumSize())
-                .expireAfterAccess(queryProperties.getExpireAfterAccess(),
-                        queryProperties.getExpirationAfterAccessUnits())
+                .initialCapacity(queryCacheProperties.getInitialCapacity())
+                .maximumSize(queryCacheProperties.getMaximumSize())
+                .expireAfterAccess(queryCacheProperties.getExpireAfterAccess(),
+                        queryCacheProperties.getExpirationAfterAccessUnits())
                 .build();
     }
 

@@ -15,8 +15,8 @@
  */
 package io.github.sergeivisotsky.metadata.engine.config;
 
+import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.config.properties.DataSourceConfigProperties;
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -38,9 +38,21 @@ public class PropertiesConfig {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "cache")
-    public RootCacheConfigProperties cacheConfigProperties() {
-        return new RootCacheConfigProperties();
+    @ConfigurationProperties(prefix = "cache.view")
+    public CacheConfigProperties viewCacheProperties() {
+        return new CacheConfigProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "cache.form")
+    public CacheConfigProperties formCacheProperties() {
+        return new CacheConfigProperties();
+    }
+
+    @Bean
+    @ConfigurationProperties(prefix = "cache.query")
+    public CacheConfigProperties queryCacheProperties() {
+        return new CacheConfigProperties();
     }
 
 }

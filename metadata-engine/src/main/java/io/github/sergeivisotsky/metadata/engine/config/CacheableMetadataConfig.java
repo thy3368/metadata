@@ -15,7 +15,7 @@
  */
 package io.github.sergeivisotsky.metadata.engine.config;
 
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
+import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.dao.FormMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.dao.ViewMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.dao.ViewQueryDao;
@@ -37,22 +37,22 @@ public class CacheableMetadataConfig {
     @Bean
     @Primary
     public ViewMetadataDao cacheableViewMetadataDao(ViewMetadataDao viewMetadataDao,
-                                                    RootCacheConfigProperties cacheConfigProperties) {
-        return new CacheableViewMetadataDao(viewMetadataDao, cacheConfigProperties);
+                                                    CacheConfigProperties viewCacheProperties) {
+        return new CacheableViewMetadataDao(viewMetadataDao, viewCacheProperties);
     }
 
 
     @Bean
     @Primary
     public FormMetadataDao cacheableFormMetadataDao(FormMetadataDao formMetadataDao,
-                                                    RootCacheConfigProperties cacheConfigProperties) {
-        return new CacheableFormMetadataDao(formMetadataDao, cacheConfigProperties);
+                                                    CacheConfigProperties formCacheProperties) {
+        return new CacheableFormMetadataDao(formMetadataDao, formCacheProperties);
     }
 
     @Bean
     @Primary
     public ViewQueryDao cacheableViewQueryDao(ViewQueryDao viewQueryDao,
-                                              RootCacheConfigProperties cacheConfigProperties) {
-        return new CacheableViewQueryDao(viewQueryDao, cacheConfigProperties);
+                                              CacheConfigProperties queryCacheProperties) {
+        return new CacheableViewQueryDao(viewQueryDao, queryCacheProperties);
     }
 }

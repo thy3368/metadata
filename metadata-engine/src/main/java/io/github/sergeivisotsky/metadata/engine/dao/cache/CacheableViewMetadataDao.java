@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.dao.ViewMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.dao.cache.key.ViewMetadataCacheKey;
 import io.github.sergeivisotsky.metadata.engine.domain.ViewMetadata;
@@ -37,14 +36,13 @@ public class CacheableViewMetadataDao implements ViewMetadataDao {
     private final ViewMetadataDao viewMetadata;
 
     public CacheableViewMetadataDao(ViewMetadataDao viewMetadata,
-                                    RootCacheConfigProperties cacheConfigProperties) {
+                                    CacheConfigProperties viewCacheProperties) {
         this.viewMetadata = viewMetadata;
-        CacheConfigProperties viewConfigProps = cacheConfigProperties.getView();
         cache = CacheBuilder.newBuilder()
-                .initialCapacity(viewConfigProps.getInitialCapacity())
-                .maximumSize(viewConfigProps.getMaximumSize())
-                .expireAfterAccess(viewConfigProps.getExpireAfterAccess(),
-                        viewConfigProps.getExpirationAfterAccessUnits())
+                .initialCapacity(viewCacheProperties.getInitialCapacity())
+                .maximumSize(viewCacheProperties.getMaximumSize())
+                .expireAfterAccess(viewCacheProperties.getExpireAfterAccess(),
+                        viewCacheProperties.getExpirationAfterAccessUnits())
                 .build();
     }
 

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.dao.ViewQueryDao;
 import io.github.sergeivisotsky.metadata.engine.domain.FieldType;
 import io.github.sergeivisotsky.metadata.engine.domain.Language;
@@ -36,7 +35,6 @@ class CacheableViewQueryDaoTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        RootCacheConfigProperties rootCacheProps = new RootCacheConfigProperties();
 
         CacheConfigProperties cacheProps = new CacheConfigProperties();
         cacheProps.setExpireAfterAccess(123);
@@ -44,9 +42,7 @@ class CacheableViewQueryDaoTest {
         cacheProps.setInitialCapacity(13);
         cacheProps.setExpirationAfterAccessUnits(TimeUnit.HOURS);
 
-        rootCacheProps.setQuery(cacheProps);
-
-        cacheableViewMetadataDao = new CacheableViewQueryDao(viewMetadataDao, rootCacheProps);
+        cacheableViewMetadataDao = new CacheableViewQueryDao(viewMetadataDao, cacheProps);
     }
 
     @Test

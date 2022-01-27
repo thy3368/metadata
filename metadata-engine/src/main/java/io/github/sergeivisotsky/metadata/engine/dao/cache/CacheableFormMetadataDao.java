@@ -20,7 +20,6 @@ import java.util.concurrent.ExecutionException;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.github.sergeivisotsky.metadata.engine.config.properties.CacheConfigProperties;
-import io.github.sergeivisotsky.metadata.engine.config.properties.RootCacheConfigProperties;
 import io.github.sergeivisotsky.metadata.engine.dao.FormMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.dao.cache.key.FormMetadataCacheKey;
 import io.github.sergeivisotsky.metadata.engine.domain.form.FormMetadata;
@@ -37,14 +36,13 @@ public class CacheableFormMetadataDao implements FormMetadataDao {
     private final FormMetadataDao formMetadataDao;
 
     public CacheableFormMetadataDao(FormMetadataDao formMetadataDao,
-                                    RootCacheConfigProperties cacheConfigProperties) {
+                                    CacheConfigProperties formCacheProperties) {
         this.formMetadataDao = formMetadataDao;
-        CacheConfigProperties formConfigProps = cacheConfigProperties.getForm();
         cache = CacheBuilder.newBuilder()
-                .initialCapacity(formConfigProps.getInitialCapacity())
-                .maximumSize(formConfigProps.getMaximumSize())
-                .expireAfterAccess(formConfigProps.getExpireAfterAccess(),
-                        formConfigProps.getExpirationAfterAccessUnits())
+                .initialCapacity(formCacheProperties.getInitialCapacity())
+                .maximumSize(formCacheProperties.getMaximumSize())
+                .expireAfterAccess(formCacheProperties.getExpireAfterAccess(),
+                        formCacheProperties.getExpirationAfterAccessUnits())
                 .build();
     }
 
