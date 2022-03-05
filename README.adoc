@@ -31,19 +31,37 @@ metadata and construct itself based on it.
 . <<chart_metadata,Chart metadata configuration>>
 .. <<chart_metadata_code,Code part>>
 .. <<chart_metadata_db,Database part>>
+. <<graphql_part,GraphQL based interface configuration>>
 
 [[getting_started]]
 == Get started
-To get started with a usage of metadata provider go to the following https://github.com/sergeivisotsky/metadata-preconfig[template repository]
-and press `Use this template` also include all branches so that starter had all versions and it would be more convenient so select a needed one.
+Metadata Engine supports two interfaces REST and GraphQL depending on particular UI architecture and overall client design.
+
+To get started with a usage of metadata provider:
+* REST representation preconfigured https://github.com/sergeivisotsky/metadata-preconfig-rest[project]
+* GraphQL representation preconfigured https://github.com/sergeivisotsky/metadata-preconfig-graphql[project]
+
+and press `Use this template` also include all branches so that starter had all versions, and it would be more convenient so select a needed one.
 
 To use a metadata provider framework without a starter just add the following maven dependency to the main application:
+
+In case of REST representation:
 
 [source,html]
 ----
 <dependency>
     <groupId>io.github.sergeivisotsky.metadata</groupId>
-    <artifactId>metadata-engine</artifactId>
+    <artifactId>metadata-rest</artifactId>
+</dependency>
+----
+
+In case of GraphQL representation:
+
+[source,html]
+----
+<dependency>
+    <groupId>io.github.sergeivisotsky.metadata</groupId>
+    <artifactId>metadata-graphql</artifactId>
 </dependency>
 ----
 
@@ -101,8 +119,26 @@ An `ExtendedFormMetadata` extends a `FormMetadata` and provides an additional fi
 
 At the same time all new fields should be added in a corresponding database table called `form_metadata` accordingly.
 
-Sample can be found in the following `db.changelog-24-08-2021.xml` changelog file in the
-following https://github.com/sergeivisotsky/metadata-provider-demo[repository]
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1" author="svisockis">
+        <addColumn tableName="view_metadata">
+            <column name="facet" type="java.sql.Types.VARCHAR(20)"/>
+        </addColumn>
+
+        <update tableName="view_metadata">
+            <column name="facet" value="front"/>
+            <where>id = 1</where>
+        </update>
+    </changeSet>
+</databaseChangeLog>
+----
 
 In addition to this a corresponding mapper should be created. An example mapper is a `FormMetadataMapper` for
 a `FormMetadata`.
@@ -630,3 +666,35 @@ To create a chart metadata schema add the following liquibase changelog files to
 ----
 <include file="/db/chart/db.changelog-master-chart.xml"/>
 ----
+
+[[graphql_part]]
+== GraphQL based interface configuration
+GraphQL based preconfigured project by itself does not include any specific adjustments except a GraphQL schemas located
+under `classpath:graphql/` directory.
+
+As an example moving back to the following extension example <<extension_points>.
+
+In case of GraphQL representation it would be required to do exactly same changes e.g.
+* New column creation in database schema using Liquibase script
+* Extended domain model adjustments
+* Mapper adjustments
+
+Plus:
+* GraphQL schema adjustments
+
+GraphQL schema adjustment:
+
+[source,graphql]
+----
+type FormMetadata {
+    id: Long
+    name: String
+    uiName: String
+    uiDescription: String
+    facet: String           # newly added facet attribute
+    sections: [FormSection]
+}
+----
+
+After doing all changes mentioned above it would be possible to go to the following URL: `http://localhost:8080/graphiql`
+and execute corresponding GraphQL query.
