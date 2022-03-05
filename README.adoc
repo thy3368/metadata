@@ -1,0 +1,632 @@
+= UI metadata
+
+A UI metadata provider is a framework to build a metadata driven UI.
+
+== Description
+This approach is especially useful in project teams with a high back-end or DBA competence rather than UI.
+
+In general provides an element alignment by invocation of a single endpoint which provides all data required like
+cardinality, language, font size, and font itself.
+
+Main point is that library itself aims to provide a configurable metadata engine and a set of endpoints at the same time
+UI should be written from scratch taking into account corresponding use case specifics to be able to properly handle a
+metadata and construct itself based on it.
+
+== Table of contents
+. <<getting_started,Get started>>
+. <<extension_points,Extension points>>
+. <<ootb_usage,OOTB usage of combo box metadata>>
+. <<sample_extension,Sample extension>>
+.. <<first_step,First step>>
+.. <<second_step,Second step>>
+.. <<third_step,Third step>>
+.. <<fourth_step,Fourth step>>
+.. <<result,Result>>
+. <<db_schema,Database schema>>
+.. <<db_graphic_representation,Graphic representation>>
+.. <<db_extension,Database extension>>
+.. <<accepted_dbs,Accepted databases>>
+. <<query_api,Metadata Query API>>
+. <<query_api_db_structure,Metadata Query API database structure>>
+. <<chart_metadata,Chart metadata configuration>>
+.. <<chart_metadata_code,Code part>>
+.. <<chart_metadata_db,Database part>>
+
+[[getting_started]]
+== Get started
+To get started with a usage of metadata provider go to the following https://github.com/sergeivisotsky/metadata-preconfig[template repository]
+and press `Use this template` also include all branches so that starter had all versions and it would be more convenient so select a needed one.
+
+To use a metadata provider framework without a starter just add the following maven dependency to the main application:
+
+[source,html]
+----
+<dependency>
+    <groupId>io.github.sergeivisotsky.metadata</groupId>
+    <artifactId>metadata-engine</artifactId>
+</dependency>
+----
+
+And the following dependency to a deployment application:
+
+[source,html]
+----
+<dependency>
+    <groupId>io.github.sergeivisotsky.metadata</groupId>
+    <artifactId>metadata-deploy</artifactId>
+</dependency>
+----
+
+It is also highly recommended adding library starter to have a compatible version of both dependencies to
+your `dependencyManegemnt` section of parent POM:
+
+[source,html]
+----
+<dependency>
+    <groupId>io.github.sergeivisotsky.metadata</groupId>
+    <artifactId>metadata-bom</artifactId>
+    <version>1.2.2</version>
+    <scope>import</scope>
+    <type>pom</type>
+</dependency>
+----
+
+It will be loaded from Maven central.
+
+[[extension_points]]
+== Extension points
+The main metadata provisioning classes are provides Out-Of-The-Box like `FormMetadata`, `Layout` etc.
+
+During the configuration a new class can be created and extend corresponding base class.
+
+Example:
+
+[source,java]
+----
+public class ExtendedFormMetadata extends FormMetadata {
+
+    private String facet;
+
+    public String getFacet() {
+        return facet;
+    }
+
+    public void setFacet(String facet) {
+        this.facet = facet;
+    }
+}
+----
+
+An `ExtendedFormMetadata` extends a `FormMetadata` and provides an additional field `facet`.
+
+At the same time all new fields should be added in a corresponding database table called `form_metadata` accordingly.
+
+Sample can be found in the following `db.changelog-24-08-2021.xml` changelog file in the
+following https://github.com/sergeivisotsky/metadata-provider-demo[repository]
+
+In addition to this a corresponding mapper should be created. An example mapper is a `FormMetadataMapper` for
+a `FormMetadata`.
+
+Each new mapper should implement `MetadataMapper<FormMetadata>` as the second parameter a corresponding metadata class is provided.
+
+`MetadataMapper` also provides a method `getSql()` which should contain a customized SQL.
+
+_NOTE: An initial SQL should be always used from the
+following https://github.com/sergeivisotsky/metadata-provider-demo[repository] Also this is a repository from which
+each back-end implementation should d got started_
+
+[[ootb_usage]]
+== OOTB usage of combo box metadata
+The following page describes an OOTB (Out-Of-The-Box) combo box metadata feature.
+
+For a combo box style and a values a metadata is used as well. As an example:
+
+[source,json]
+----
+[
+  {
+    "id": 1,
+    "codifier": "CD_001",
+    "font": "Times New Roman",
+    "fontSize": 12,
+    "weight": 300,
+    "height": 20,
+    "displayable": true,
+    "immutable": false,
+    "comboContent": [
+      {
+        "key": "initial",
+        "defaultValue": "Some initial value",
+        "comboId": 1
+      },
+      {
+        "key": "secondary",
+        "defaultValue": "Some secondary value",
+        "comboId": 1
+      },
+      {
+        "key": "someThird",
+        "defaultValue": "Some third value",
+        "comboId": 1
+      }
+    ]
+  }
+]
+----
+
+In main section are contained a general properties of combo box like weight, height, Font and Font-size.
+
+A `comboContent` sub-section contains a content of the combo box aka all possible default values.
+
+In the result when UI invokes a metadata endpoint it first should construct the page itself and the second it should
+parse an example combobox.
+
+Sample in React:
+
+[source,javascript]
+----
+class SampleCombo extends Component {
+    state = {
+        metadata: null,
+    }
+
+    // process metadata
+    componentDidMount() {
+        const viewName = 'main';
+        const self = this;
+        axios.all([getMetadata(viewName), getMessageHeader(viewName)])
+            .then(axios.spread((metadata, header) => {
+                let formattedMetadata = formatMetadata(metadata);
+                formattedMetadata = populateFields(header, formattedMetadata);
+                self.setState({metadata: formattedMetadata, activeTab: formattedMetadata.sections.get('comboContent')});
+            }));
+    }
+
+    // renders component
+    render() {
+        const {metadata, activeTab} = this.state;
+        if (!metadata) return <Loader/>;
+        const {
+            codifier,
+            font,
+            fontSize,
+            weight,
+            height,
+            displayable,
+            immutable,
+        } = metadata;
+        return (
+            <div id={uiName} className="klp-page">
+               <select id="sample" name="sample" style="font={font};fontSize={fontSize};weight={weight};height={height}">
+                  <option value="{key}">{defaultValue}</option>
+               </select>
+            </div>
+        );
+    }
+}
+----
+
+_NOTE: This example is not an ideal however shows the main idea._
+
+[[sample_extension]]
+== Sample extension
+Let's imagine we have the following preconfigured form metadata provider which was crafted from the following
+preconfigured https://github.com/sergeivisotsky/metadata-provider-preconfig/[repository]
+
+[source,java]
+----
+/**
+ * @author Sergei Visotsky
+ */
+@Component
+public class ViewMetadataMapper implements MetadataMapper<ViewMetadata> {
+
+    @Override
+    public String getSql() {
+        return "SELECT fm.id,\n" +
+                "       fm.view_name,\n" +
+                "       fm.cardinality,\n" +
+                "       fm.language,\n" +
+                "       fm.offset,\n" +
+                "       fm.padding,\n" +
+                "       fm.font,\n" +
+                "       fm.font_size,\n" +
+                "       fm.description,\n" +
+                "       fm.facet,\n" +
+                "       vf.enabled_by_default,\n" +
+                "       vf.ui_control\n" +
+                "FROM view_metadata fm\n" +
+                "         LEFT JOIN view_field vf on fm.id = vf.view_metadata_id\n" +
+                "WHERE fm.view_name = :viewName\n" +
+                "  AND fm.language = :lang";
+    }
+
+    @Override
+    public ExtendedViewMetadata map(ResultSet rs) {
+        try {
+            ExtendedViewMetadata metadata = new ExtendedViewMetadata();
+            metadata.setViewName(rs.getString("form_name"));
+            metadata.setCardinality(rs.getString("cardinality"));
+            metadata.setLang(Language.valueOf(rs.getString("language")
+                    .toUpperCase(Locale.ROOT)));
+            metadata.setOffset(rs.getInt("offset"));
+            metadata.setPadding(rs.getInt("padding"));
+            metadata.setFont(rs.getString("font"));
+            metadata.setFontSize(rs.getInt("font_size"));
+            metadata.setDescription(rs.getString("description"));
+            ViewField viewField = new ViewField();
+            viewField.setEnabledByDefault(rs.getInt("enabled_by_default"));
+            viewField.setUiControl(rs.getString("ui_control"));
+            metadata.setViewField(viewField);
+            metadata.setFacet(rs.getString("facet"));
+            return metadata;
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get value from ResultSet for Mapper: {}" +
+                    ViewMetadataMapper.class.getSimpleName(), e);
+        }
+    }
+}
+----
+
+From the first glance this is more than enough, however for a delivery project specific needs it is required to
+add an additional structure which will represent some mysterious footer data.
+
+What we need is to do the following steps:
+1. Create a corresponding database table/new fields by means of adjusting deployment Liquibase scripts
+2. Add a new structure in preconfigured domain model like `ExtendedViewMetadata` or create a completely new one which will be a part of form metadata
+3. Adjust `ViewMetadataMapper` or create a completely new mapper in case of the new requirements
+
+However lets move to our example of mysterious footer...
+We have a requirement that:
+1. Web page footer should be generated from metadata
+2. Should be a bumped up in the response of OOTBS metadata endpoint
+
+[[first_step]]
+=== First step
+Create a new deployment Liquibase script.
+In out case it is called just `db.changelog-12-09-2021.xml`
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="1" author="svisockis">
+        <createTable tableName="footer">
+            <column name="id" type="java.sql.Types.BIGINT" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="resizable" type="java.sql.Types.BOOLEAN"/>
+            <column name="displayable" type="java.sql.Types.BOOLEAN"/>
+            <column name="defaultText" type="java.sql.Types.VARCHAR(150)"/>
+            <column name="form_metadata_id" type="java.sql.Types.BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="footer" baseColumnNames="view_metadata_id"
+                                 constraintName="footer_view_view_metadata_fk"
+                                 referencedTableName="view_metadata"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
+----
+Our footer metadata should hold an information whether footer will be resizable, displayable as well as default text
+that user will see after the page is generated as well as foreign key to metadata base table.
+
+[[second_step]]
+=== Second step
+Create a corresponding POJO class.
+
+[source,java]
+----
+public class Footer {
+
+    private Long id;
+    private Boolean displayable;
+    private Boolean resizable;
+    private String defaultText;
+
+    // Constructor, getter and setters omitted
+}
+----
+Add a reference to parent POJO like this:
+
+[source,java]
+----
+/**
+ * @author Sergei Visotsky
+ */
+public class ExtendedViewMetadata extends ViewMetadata {
+
+    private String facet;
+    private Footer footer;
+
+    // Constructor, getters and setters omitted
+}
+----
+
+[[third_step]]
+=== Third step
+Adjust a corresponding mapper. `ViewMetadataMapper` in our case.
+1. SQL should be adjusted
+2. Result set extraction should be adjusted
+
+[source,java]
+----
+/**
+ * @author Sergei Visotsky
+ */
+@Component
+public class ViewMetadataMapper implements MetadataMapper<ViewMetadata> {
+
+    @Override
+    public String getSql() {
+        return "SELECT fm.id,\n" +
+                "       fm.view_name,\n" +
+                "       fm.cardinality,\n" +
+                "       fm.language,\n" +
+                "       fm.offset,\n" +
+                "       fm.padding,\n" +
+                "       fm.font,\n" +
+                "       fm.font_size,\n" +
+                "       fm.description,\n" +
+                "       fm.facet,\n" +
+                "       vf.enabled_by_default,\n" +
+                "       vf.ui_control,\n" +
+                "       ft.displayable,\n" +         // new
+                "       ft.resizable,\n" +           // new
+                "       ft.default_Text\n" +         // new
+                "FROM view_metadata fm\n" +
+                "         LEFT JOIN view_field vf on fm.id = vf.view_metadata_id\n" +
+                "         LEFT JOIN footer ft on fm.id = ft.view_metadata_id\n" +      // new
+                "WHERE fm.view_name = :viewName\n" +
+                "  AND fm.language = :lang";
+    }
+
+    @Override
+    public ExtendedViewMetadata map(ResultSet rs) {
+        try {
+            ExtendedViewMetadata metadata = new ExtendedViewMetadata();
+            metadata.setViewName(rs.getString("view_name"));
+            metadata.setCardinality(rs.getString("cardinality"));
+            metadata.setLang(Language.valueOf(rs.getString("language")
+                    .toUpperCase(Locale.ROOT)));
+            metadata.setOffset(rs.getInt("offset"));
+            metadata.setPadding(rs.getInt("padding"));
+            metadata.setFont(rs.getString("font"));
+            metadata.setFontSize(rs.getInt("font_size"));
+            metadata.setDescription(rs.getString("description"));
+            ViewField viewField = new ViewField();
+            viewField.setEnabledByDefault(rs.getInt("enabled_by_default"));
+            viewField.setUiControl(rs.getString("ui_control"));
+            metadata.setViewField(viewField);
+            metadata.setFacet(rs.getString("facet"));
+
+            // --- New block ---
+            Footer footer = new Footer();
+            footer.setResizable(rs.getBoolean("resizable"));
+            footer.setDisplayable(rs.getBoolean("displayable"));
+            footer.setDefaultText(rs.getString("default_text"));
+            metadata.setFooter(footer);
+            // --- End new block ---
+
+            return metadata;
+        } catch (SQLException e) {
+            throw new RuntimeException("Unable to get value from ResultSet for Mapper: {}" +
+                    ViewMetadataMapper.class.getSimpleName(), e);
+        }
+    }
+}
+----
+
+[[fourth_step]]
+=== Fourth step
+Run deployer application to update a database schema and application itself.
+
+[[result]]
+=== Result
+In the result you can see the following new section in metadata endpoint
+
+[source,json]
+----
+}
+ // ...
+
+   "footer": {
+      "id": null,
+      "displayable": true,
+      "resizable": false,
+      "defaultText": "This is some footer needed to fulfill our business requirements"
+   }
+
+ // ...
+}
+----
+
+A source code of this demo can be found in the following https://github.com/sergeivisotsky/metadata-provider-wiki[repository].
+
+[[db_schema]]
+== Database schema
+Library provides an OOTB (Out-Of-The-Box) database schema tables that whose goal is to provide a base metadata which
+is common for all UIs possible. It consists of the following tables:
+
+* view_metadata
+* view_field
+* layout
+* lookup_holder
+* lookup_metadata
+* combo_box
+* combo_box_content
+* combo_box_and_content_relation
+* navigation
+* navigation_element
+* form_metadata
+* form_section
+* form_field
+* lookup_info
+* amd_translation
+
+As can be seen not much what is a consequence of as generic solution as possible.
+
+[[db_graphic_representation]]
+=== Graphic representation
+image::https://github.com/sergeivisotsky/metadata-provider/blob/master/docs/db_schema.png[Database,874,1150]
+
+[[db_extension]]
+=== Database extension
+It is possible to extend a database schema. For an extension purposes and database version management purposes a Liquibase is used.
+Out of the box solution is written in XML representation however YAML representation is also acceptable
+as per wish/requirements in each particular case.
+
+[[accepted_dbs]]
+=== Accepted databases
+Any relational database is supported.
+However, NoSQL are not supported at the moment.
+
+[[query_api]]
+== Metadata Query API
+It is possible to query a view data (content) using the following endpoint:
+
+[source,text]
+----
+GET: /api/v1/view/main/en/query
+----
+
+In addition to this there is a possibility to specify a filtering, sorting and paging parameters to apply to a queried data.
+
+Like this:
+
+[source,text]
+----
+/api/v1/view/main/en/query?fieldName1=value1&fieldName2=value2&fieldName3:bw=value3,value4&_sort=desc(fieldName1),asc(fieldName2)&_offset=200&_limit=100
+----
+
+The URL above is equivalent to the following logical expression:
+
+    fieldName1 = value1 and fieldName2 = value2 and fieldName3 between value3 and value4
+
+- The result is sorted by two fields: fieldName1 and fieldName2.
+- Query results are returned starting from 200th row.
+- Not more than 100 rows are returned
+
+Different types of operators may used for comparison.
+They are specified in field name after ':' (colon) separator. Short codes
+have to be used to define operator types. They are provided in the table below.
+
+|===
+|Operator |Code |Property
+
+|Equals   |eq   |Inclusive
+|Greater  |gt   |Exclusive
+|Less     |ls   |Exclusive
+|Between  |bw   |Inclusive
+|Like     |lk   |N/A
+|===
+
+Code value may me omitted for equals operator.
+
+When Between operator requires two values. They must be specified as comma-separated list. E.g.
+
+[source,text]
+----
+some_name:bw=valueOne,valueTwo
+----
+
+This is an equivalent to the following logical expression:
+
+[source,text]
+----
+some_name between 'valueOne' and 'valueTwo'
+----
+
+To have comma inside value it is necessary to use double comma. E.g.
+
+[source,text]
+----
+some_name:bw=valueOne,value,,Two
+----
+
+This is an equivalent to the following logical expression:
+
+[source,text]
+----
+some_name between 'valueOne' and 'value,Two'
+----
+
+Like operator uses '*' symbol for defining arbitrary character sequence match.
+It may be self-escaped. I.e. "**" means one * set as value.
+
+Values may have different types. Inside the URL they are specified according to the following masks:
+
+|===
+|Type        |Mask
+
+|INTEGER     |(number value)
+|STRING      |(string value)
+|DATE        |yyyy-MM-dd
+|TIME        |HH:mm
+|DATETIME    |yyyy-MM-ddTHH:mm:ss
+|===
+
+Dates and times are always specified in UTC time zone. It is responsibility of client to calculate applicable UTC value depending on his current zone.
+
+[[query_api_db_structure]]
+== Metadata Query API database structure
+Each view holds an SQL statement which is executed behind this view construction on UI by execution of another query endpoint.
+
+`view_metadata` table hold a column `definition` which by itself is an SQL template which holds a stubs to be replaced
+during a query API execution if filter or pagination was provided.
+
+An SQL definition looks like this:
+
+[source,SQL]
+----
+SELECT sst.column_one,
+       sst.column_two,
+       sst.column_three,
+       sst.column_four,
+       sst.column_five,
+       sst.column_six,
+       sst.column_seven,
+       sstt.a_column_one,
+       sstt.b_column_two,
+       sstt.c_column_three,
+       sstt.d_column_four,
+       sstt.e_column_five,
+       sstt.f_column_six,
+       sstt.g_column_seven
+FROM some_sample_table sst
+         LEFT JOIN some_sample_table_two sstt
+                   ON sst.id = sstt.some_sample_table_one_id
+WHERE {filter}
+      {order}
+      {offset}
+      {limit}
+----
+
+During the runtime when query API is executed `{filter}`, `{order}`, `{offset}`, `{limit}` stubs are replaced with a corresponding SQL statements.
+
+This SQL statement may hold a join of any tables which data should be joined and displayed as a web page content.
+
+It means that even if https://github.com/sergeivisotsky/metadata-provider-preconfig/blob/master/metadata-deployer/src/main/resources/db/db.changelog-custom-schema.xml[metadata-provider-preconfig]
+provides a dummy table names they should be replaced by a particular project needed content tables.
+
+[[chart_metadata]]
+== Chart metadata configuration
+
+[[chart_metadata_code]]
+=== Code part
+Chart metadata is supposed to provide a metadata for a different kind of charts e.g. pie chart, column chart and related.
+
+Out of the box chart metadata API is activated in case if `metadata.active.chart=true` added.
+Otherwise by default it is `false` and chart metadata beans are not activated.
+
+[[chart_metadata_db]]
+=== Database part
+To create a chart metadata schema add the following liquibase changelog files to your changelog master:
+
+[source,xml]
+----
+<include file="/db/chart/db.changelog-master-chart.xml"/>
+----
