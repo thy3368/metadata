@@ -1,9 +1,10 @@
 = Contribution rules
 
-There are just four rules of contribution:
+There are just several rules of contribution.
 
 1. Create an issue in GitHub with a fully described functionality
-2. Fork repository, provide your enhancement and create a pull request
-3. If a new class is required to be created it should contain a JavaDoc `@author` on top of the class and copyright on top of the `.java` file
-4. If a new class if a public API then JavaDoc should be written on top of each method. Method level JavaDoc should
-contain a description of what it does.
+2. Get an approval of feature proposed
+3. If feature approved, fork repository, provide your enhancement and create a pull request
+4. If a new class is required to be created it should contain a JavaDoc `@author` on top of the class and copyright on top of the `.java` file
+5. If a new class if a public API then JavaDoc should be written on top of each method. Method level JavaDoc should contain a description of what it does.
+6. Also, each new class should contain an Apache copyright, which can be found in any class already present in repository
