@@ -481,7 +481,10 @@ In the result you can see the following new section in metadata endpoint
 }
 ----
 
-A source code of this demo can be found in the following https://github.com/sergeivisotsky/metadata-provider-wiki[repository].
+For a cases when it is required to create a completely new metadata endpoint or GraphQL query with a new database
+table a corresponding DAO class should be implemented.
+
+Each new DAO class should extend an `AbstractMetadataDao` which hold an encapsulated Spring's `NamedParameterJdbcTemplate` API invocation.
 
 [[db_schema]]
 == Database schema

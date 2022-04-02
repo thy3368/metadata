@@ -32,8 +32,29 @@ public abstract class AbstractMetadataDao {
 
     protected NamedParameterJdbcTemplate jdbcTemplate;
 
+    /**
+     * Execute an SQL query and extract a {@link java.sql.ResultSet} into a collection of elements.
+     *
+     * @param params SQL query parameter map.
+     * @param mapper {@link java.sql.ResultSet} extraction mapper.
+     * @param <T>    type of returned collection.
+     * @return collection of elements.
+     */
     protected <T> List<T> executeQuery(Map<String, Object> params, MetadataMapper<T> mapper) {
         return jdbcTemplate.query(mapper.getSql(), params, (rs, index) -> mapper.map(rs));
+    }
+
+    /**
+     * Execute an SQL query for a single element as a return type.
+     * Should be used when one and only one element should be returned.
+     *
+     * @param params SQL query parameter map.
+     * @param mapper {@link java.sql.ResultSet} extraction mapper.
+     * @param <T>    return type.
+     * @return single element.
+     */
+    protected <T> T executeQueryForSingle(Map<String, Object> params, MetadataMapper<T> mapper) {
+        return jdbcTemplate.queryForObject(mapper.getSql(), params, (rs, rowNum) -> mapper.map(rs));
     }
 
     @Autowired
