@@ -309,13 +309,19 @@ From the first glance this is more than enough, however for a delivery project s
 add an additional structure which will represent some mysterious footer data.
 
 What we need is to do the following steps:
+
 1. Create a corresponding database table/new fields by means of adjusting deployment Liquibase scripts
+
 2. Add a new structure in preconfigured domain model like `ExtendedViewMetadata` or create a completely new one which will be a part of form metadata
+
 3. Adjust `ViewMetadataMapper` or create a completely new mapper in case of the new requirements
 
-However lets move to our example of mysterious footer...
+However, lets move to our example of mysterious footer...
+
 We have a requirement that:
+
 1. Web page footer should be generated from metadata
+
 2. Should be a bumped up in the response of OOTBS metadata endpoint
 
 [[first_step]]
@@ -386,7 +392,9 @@ public class ExtendedViewMetadata extends ViewMetadata {
 [[third_step]]
 === Third step
 Adjust a corresponding mapper. `ViewMetadataMapper` in our case.
+
 1. SQL should be adjusted
+
 2. Result set extraction should be adjusted
 
 [source,java]
@@ -676,14 +684,18 @@ To create a chart metadata schema add the following liquibase changelog files to
 GraphQL based preconfigured project by itself does not include any specific adjustments except a GraphQL schemas located
 under `classpath:graphql/` directory.
 
-As an example moving back to the following extension example <<extension_points>.
+As an example moving back to the following extension example <<extension_points,extension points>>.
 
 In case of GraphQL representation it would be required to do exactly same changes e.g.
+
 * New column creation in database schema using Liquibase script
+
 * Extended domain model adjustments
+
 * Mapper adjustments
 
 Plus:
+
 * GraphQL schema adjustments
 
 GraphQL schema adjustment:
