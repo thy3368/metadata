@@ -25,7 +25,7 @@ corresponding use case specifics to be able to properly handle a metadata and co
 . <<db_schema,Database schema>>
 .. <<db_graphic_representation,Graphic representation>>
 .. <<db_extension,Database extension>>
-.. <<accepted_dbs,Accepted databases>>
+.. <<supported_dbs,Supported databases>>
 . <<query_api,Metadata Query API>>
 . <<query_api_db_structure,Metadata Query API database structure>>
 . <<chart_metadata,Chart metadata configuration>>
@@ -527,8 +527,8 @@ It is possible to extend a database schema. For an extension purposes and databa
 Out of the box solution is written in XML representation however YAML representation is also acceptable
 as per wish/requirements in each particular case.
 
-[[accepted_dbs]]
-=== Accepted databases
+[[supported_dbs]]
+=== Supported databases
 Any relational database is supported.
 However, NoSQL are not supported at the moment.
 
