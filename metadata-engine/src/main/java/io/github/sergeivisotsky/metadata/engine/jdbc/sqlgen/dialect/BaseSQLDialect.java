@@ -58,7 +58,7 @@ abstract class BaseSQLDialect implements SQLDialect {
 
     private final Map<FieldType, SQLFormatter> formatterMap;
 
-    public BaseSQLDialect(Map<FieldType, SQLFormatter> formatterMap) {
+    BaseSQLDialect(Map<FieldType, SQLFormatter> formatterMap) {
         this.formatterMap = formatterMap;
     }
 
