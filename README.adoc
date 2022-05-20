@@ -44,42 +44,9 @@ To get started with a usage of metadata provider:
 
 and press `Use this template` also include all branches so that starter had all versions, and it would be more convenient so select a needed one.
 
-To use a metadata provider framework without a starter just add the following maven dependency to the main application:
+To use a metadata provider framework without a starter just add the following BOM to the main application under `dependencyManagement` section:
 
-In case of REST representation:
-
-[source,html]
-----
-<dependency>
-    <groupId>io.github.sergeivisotsky.metadata</groupId>
-    <artifactId>metadata-rest</artifactId>
-</dependency>
-----
-
-In case of GraphQL representation:
-
-[source,html]
-----
-<dependency>
-    <groupId>io.github.sergeivisotsky.metadata</groupId>
-    <artifactId>metadata-graphql</artifactId>
-</dependency>
-----
-
-And the following dependency to a deployment application:
-
-[source,html]
-----
-<dependency>
-    <groupId>io.github.sergeivisotsky.metadata</groupId>
-    <artifactId>metadata-deploy</artifactId>
-</dependency>
-----
-
-It is also highly recommended adding library starter to have a compatible version of both dependencies to
-your `dependencyManegemnt` section of parent POM:
-
-[source,html]
+[source,xml]
 ----
 <dependency>
     <groupId>io.github.sergeivisotsky.metadata</groupId>
@@ -90,7 +57,12 @@ your `dependencyManegemnt` section of parent POM:
 </dependency>
 ----
 
-It will be loaded from Maven central.
+The following BOM itself contains all needed versions of all Metadata Framework dependencies that may be used.
+
+Dependencies that it contains:
+* metadata-rest - metadata REST based interface
+* metadata-graphql - metadata GraphQL based interface
+* metadata-deploy - metadata Liquibase deployment scripts (Out-Of-The-Box metadata engine database schema)
 
 [[extension_points]]
 == Extension points
