@@ -2,7 +2,7 @@
 
 == 1.4.0
 === Features
-* [95] - Introduce executeQuery for a single element
+* [#95] - Introduce executeQuery for a single element
 
 == 1.3.0
 === Features
