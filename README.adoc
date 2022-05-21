@@ -60,9 +60,12 @@ To use a metadata provider framework without a starter just add the following BO
 The following BOM itself contains all needed versions of all Metadata Framework dependencies that may be used.
 
 Dependencies that it contains:
-* metadata-rest - metadata REST based interface
-* metadata-graphql - metadata GraphQL based interface
-* metadata-deploy - metadata Liquibase deployment scripts (Out-Of-The-Box metadata engine database schema)
+
+- metadata-rest - metadata REST based interface
+
+- metadata-graphql - metadata GraphQL based interface
+
+- metadata-deploy - metadata Liquibase deployment scripts (Out-Of-The-Box metadata engine database schema)
 
 [[extension_points]]
 == Extension points
