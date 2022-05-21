@@ -61,11 +61,9 @@ The following BOM itself contains all needed versions of all Metadata Framework 
 
 Dependencies that it contains:
 
-- metadata-rest - metadata REST based interface
-
-- metadata-graphql - metadata GraphQL based interface
-
-- metadata-deploy - metadata Liquibase deployment scripts (Out-Of-The-Box metadata engine database schema)
+* metadata-rest - metadata REST based interface
+* metadata-graphql - metadata GraphQL based interface
+* metadata-deploy - metadata Liquibase deployment scripts (Out-Of-The-Box metadata engine database schema)
 
 [[extension_points]]
 == Extension points
