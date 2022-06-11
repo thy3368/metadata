@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.engine.filtering;
+package io.github.sergeivisotsky.metadata.engine.rest.filtering;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,7 @@ import io.github.sergeivisotsky.metadata.engine.domain.SortDirection;
 import io.github.sergeivisotsky.metadata.engine.domain.ViewField;
 import io.github.sergeivisotsky.metadata.engine.domain.ViewMetadata;
 import io.github.sergeivisotsky.metadata.engine.exception.UrlParseException;
+import io.github.sergeivisotsky.metadata.engine.filtering.ViewQueryParser;
 import io.github.sergeivisotsky.metadata.engine.filtering.dto.AndFilter;
 import io.github.sergeivisotsky.metadata.engine.filtering.dto.BetweenFilter;
 import io.github.sergeivisotsky.metadata.engine.filtering.dto.EqualsFilter;
@@ -49,13 +50,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * @author Sergei Visotsky
  */
-public class UrlViewQueryParser {
-
-    private static final String DELIMITER = ":";
-    private static final char MULTI_VALUE_DELIMITER = ',';
-    private static final String OFFSET = "_offset";
-    private static final String LIMIT = "_limit";
-    private static final String SORT = "_sort";
+public class UrlViewQueryParser extends ViewQueryParser {
 
     private static final Map<FieldType, UrlParameterParser> PARAMETER_PARSER_MAP = ImmutableMap.<FieldType, UrlParameterParser>builder()
             .put(FieldType.STRING, new StringTypeParser())
@@ -66,6 +61,7 @@ public class UrlViewQueryParser {
             .put(FieldType.TIME, new TimeTypeParser())
             .build();
 
+    @Override
     public ViewQuery constructViewQuery(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
         return ViewQuery.builder()
                 .filter(parseFilter(metadata, params))
@@ -173,28 +169,6 @@ public class UrlViewQueryParser {
 
     private Filter createLikeFilter(ViewField field, String likeMask) {
         return new LikeFilter(field.getFieldType(), field.getName(), likeMask);
-    }
-
-    private Long parseOffset(Map<String, String[]> params) throws UrlParseException {
-        String[] strArray = params.get(OFFSET);
-        if (strArray == null) {
-            return null;
-        }
-        if (strArray.length > 1) {
-            throw new UrlParseException("Only one _offset parameter allowed");
-        }
-        return Long.parseLong(strArray[0]);
-    }
-
-    private Integer parseLimit(Map<String, String[]> params) throws UrlParseException {
-        String[] strArray = params.get(LIMIT);
-        if (strArray == null) {
-            return null;
-        }
-        if (strArray.length > 1) {
-            throw new UrlParseException("Only one _limit parameter allowed");
-        }
-        return Integer.parseInt(strArray[0]);
     }
 
     public List<Order> parseOrderList(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
