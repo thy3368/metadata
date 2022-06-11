@@ -16,7 +16,6 @@
 
 package io.github.sergeivisotsky.metadata.engine.domain;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,9 +49,6 @@ public class ViewQueryResult {
     }
 
     public List<Order> getOrderList() {
-        if (orderList == null) {
-            return Collections.emptyList();
-        }
         return orderList;
     }
 
