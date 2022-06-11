@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Configuration;
 public class FilteringConfig {
 
     @Bean
-    public UrlViewQueryParser urlViewQueryParser() {
+    public UrlViewQueryParser queryFilterService() {
         return new UrlViewQueryParser();
     }
 }
