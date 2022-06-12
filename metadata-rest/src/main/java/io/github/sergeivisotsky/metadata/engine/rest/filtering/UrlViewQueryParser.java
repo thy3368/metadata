@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.sergeivisotsky.metadata.engine.filtering;
+package io.github.sergeivisotsky.metadata.engine.rest.filtering;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,10 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 import io.github.sergeivisotsky.metadata.engine.domain.FieldType;
-import io.github.sergeivisotsky.metadata.engine.domain.Order;
-import io.github.sergeivisotsky.metadata.engine.domain.SortDirection;
 import io.github.sergeivisotsky.metadata.engine.domain.ViewField;
 import io.github.sergeivisotsky.metadata.engine.domain.ViewMetadata;
-import io.github.sergeivisotsky.metadata.engine.exception.UrlParseException;
+import io.github.sergeivisotsky.metadata.engine.exception.ViewQueryParseException;
+import io.github.sergeivisotsky.metadata.engine.filtering.ViewQueryParser;
 import io.github.sergeivisotsky.metadata.engine.filtering.dto.AndFilter;
 import io.github.sergeivisotsky.metadata.engine.filtering.dto.BetweenFilter;
 import io.github.sergeivisotsky.metadata.engine.filtering.dto.EqualsFilter;
@@ -49,13 +48,7 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * @author Sergei Visotsky
  */
-public class UrlViewQueryParser {
-
-    private static final String DELIMITER = ":";
-    private static final char MULTI_VALUE_DELIMITER = ',';
-    private static final String OFFSET = "_offset";
-    private static final String LIMIT = "_limit";
-    private static final String SORT = "_sort";
+public class UrlViewQueryParser extends ViewQueryParser {
 
     private static final Map<FieldType, UrlParameterParser> PARAMETER_PARSER_MAP = ImmutableMap.<FieldType, UrlParameterParser>builder()
             .put(FieldType.STRING, new StringTypeParser())
@@ -66,7 +59,8 @@ public class UrlViewQueryParser {
             .put(FieldType.TIME, new TimeTypeParser())
             .build();
 
-    public ViewQuery constructViewQuery(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
+    @Override
+    public ViewQuery constructViewQuery(ViewMetadata metadata, Map<String, String[]> params) throws ViewQueryParseException {
         return ViewQuery.builder()
                 .filter(parseFilter(metadata, params))
                 .offset(parseOffset(params))
@@ -75,7 +69,7 @@ public class UrlViewQueryParser {
                 .build();
     }
 
-    private Filter parseFilter(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
+    private Filter parseFilter(ViewMetadata metadata, Map<String, String[]> params) throws ViewQueryParseException {
 
         List<Filter> filterList = new ArrayList<>();
 
@@ -84,7 +78,7 @@ public class UrlViewQueryParser {
             String paramValue = getAndValidateParam(params, paramKey);
 
             if (StringUtils.isEmpty(paramValue)) {
-                throw new UrlParseException("Parameter " + paramKey + " is null");
+                throw new ViewQueryParseException("Parameter " + paramKey + " is null");
             }
 
             // _ is a special character which is not used for
@@ -125,7 +119,7 @@ public class UrlViewQueryParser {
         return andFilter;
     }
 
-    private Filter createFilter(ViewField field, FilterOperator operator, String paramKey, String paramValue) throws UrlParseException {
+    private Filter createFilter(ViewField field, FilterOperator operator, String paramKey, String paramValue) throws ViewQueryParseException {
         switch (operator) {
             case EQUALS:
                 return createEqualsFilter(field, paramValue);
@@ -138,7 +132,7 @@ public class UrlViewQueryParser {
             case LIKE:
                 return createLikeFilter(field, paramValue);
             default:
-                throw new UrlParseException("Operator " + operator + " in parameter " + paramKey + "is not supported");
+                throw new ViewQueryParseException("Operator " + operator + " in parameter " + paramKey + "is not supported");
         }
     }
 
@@ -147,10 +141,10 @@ public class UrlViewQueryParser {
         return new EqualsFilter(field.getFieldType(), field.getName(), value);
     }
 
-    private Filter createBetweenFilter(ViewField field, String paramValue) throws UrlParseException {
+    private Filter createBetweenFilter(ViewField field, String paramValue) throws ViewQueryParseException {
         List<String> split = ParseUtils.splitEscaped(paramValue, MULTI_VALUE_DELIMITER);
         if (split.size() != 2) {
-            throw new UrlParseException("Parameter " + field.getName() +
+            throw new ViewQueryParseException("Parameter " + field.getName() +
                     " should have only two values delimited by " + MULTI_VALUE_DELIMITER);
         }
         return new BetweenFilter(
@@ -175,95 +169,10 @@ public class UrlViewQueryParser {
         return new LikeFilter(field.getFieldType(), field.getName(), likeMask);
     }
 
-    private Long parseOffset(Map<String, String[]> params) throws UrlParseException {
-        String[] strArray = params.get(OFFSET);
-        if (strArray == null) {
-            return null;
-        }
-        if (strArray.length > 1) {
-            throw new UrlParseException("Only one _offset parameter allowed");
-        }
-        return Long.parseLong(strArray[0]);
-    }
-
-    private Integer parseLimit(Map<String, String[]> params) throws UrlParseException {
-        String[] strArray = params.get(LIMIT);
-        if (strArray == null) {
-            return null;
-        }
-        if (strArray.length > 1) {
-            throw new UrlParseException("Only one _limit parameter allowed");
-        }
-        return Integer.parseInt(strArray[0]);
-    }
-
-    public List<Order> parseOrderList(ViewMetadata metadata, Map<String, String[]> params) throws UrlParseException {
-        String strSort = getAndValidateParam(params, SORT);
-
-        List<Order> orderList;
-        if (StringUtils.isNotEmpty(strSort)) {
-            orderList = parseSort(metadata, strSort);
-        } else {
-            orderList = List.of();
-        }
-        return orderList;
-    }
-
-    public List<Order> parseSort(ViewMetadata metadata, String strSort) throws UrlParseException {
-        // remove spaces if any
-        strSort = StringUtils.replace(strSort, " ", "");
-
-        String[] splitResult = StringUtils.split(strSort, MULTI_VALUE_DELIMITER);
-
-        List<Order> result = new ArrayList<>();
-        for (String order : splitResult) {
-
-            String directionName = StringUtils.substringBefore(order, "(").toUpperCase();
-            String fieldName = StringUtils.substringBetween(order, "(", ")");
-
-            ViewField field = getViewFieldByName(metadata, fieldName);
-            if (field == null) {
-                throw new UrlParseException("Sort field " + fieldName + " is not supported by this view.");
-            }
-
-            SortDirection direction;
-
-            try {
-                direction = SortDirection.valueOf(directionName);
-            } catch (IllegalArgumentException e) {
-                throw new UrlParseException("Invalid sort direction definition passed " + directionName);
-            }
-
-            result.add(new Order(fieldName, direction));
-        }
-
-        return result;
-    }
-
     private Object parseTypedValue(ViewField field, String paramValue) {
         return PARAMETER_PARSER_MAP
                 .get(field.getFieldType())
                 .parseTypedValue(field, paramValue);
-    }
-
-    private String getAndValidateParam(Map<String, String[]> params, String paramName) throws UrlParseException {
-        String[] array = params.get(paramName);
-        if (array == null || array.length == 0) {
-            return null;
-        }
-        if (array.length > 1) {
-            throw new UrlParseException("Only one parameter " + paramName + " is allowed in view query URL");
-        }
-        return array[0];
-    }
-
-    private ViewField getViewFieldByName(ViewMetadata metadata, String fieldName) throws UrlParseException {
-        return metadata.getViewField()
-                .stream()
-                .filter(field -> fieldName.equalsIgnoreCase(field.getName()))
-                .findFirst()
-                .orElseThrow(() -> new UrlParseException("Field " + fieldName +
-                        " is not supported for a view " + metadata.getViewName()));
     }
 
 }

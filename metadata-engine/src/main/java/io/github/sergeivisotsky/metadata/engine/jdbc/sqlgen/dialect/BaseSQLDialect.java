@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.github.sergeivisotsky.metadata.engine.domain.FieldType;
 import io.github.sergeivisotsky.metadata.engine.domain.Order;
@@ -146,13 +147,14 @@ abstract class BaseSQLDialect implements SQLDialect {
     }
 
     protected String createOrderClause(List<Order> orderList, Map<String, String> fieldNameToFilterColumnMap) {
-        if (orderList.isEmpty()) {
+        if (orderList == null || orderList.isEmpty()) {
             return "";
         }
+        Map<String, String> lowerCasedMap = lowerCaseAll(fieldNameToFilterColumnMap);
         StringBuilder buf = new StringBuilder("ORDER BY");
         boolean first = true;
         for (Order order : orderList) {
-            String sqlColumn = fieldNameToFilterColumnMap.get(order.getFieldName());
+            String sqlColumn = lowerCasedMap.get(order.getFieldName());
             if (first) {
                 first = false;
             } else {
@@ -207,6 +209,13 @@ abstract class BaseSQLDialect implements SQLDialect {
             }
         }
         return resultMap;
+    }
+
+    private Map<String, String> lowerCaseAll(Map<String, String> mapToLowercase) {
+        return mapToLowercase.entrySet().stream()
+                .collect(Collectors.toMap(
+                        stringStringEntry -> stringStringEntry.getKey().toLowerCase(),
+                        stringStringEntry -> stringStringEntry.getValue().toLowerCase()));
     }
 
     @Autowired
