@@ -16,10 +16,6 @@
 
 package io.github.sergeivisotsky.metadata.engine.mapper;
 
-import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 /**
  * An interface to be implemented by mappers from DTO to DTO.
  *
@@ -27,16 +23,14 @@ import java.util.stream.Collectors;
  * @param <T> map to.
  * @author Sergei Visotsky
  */
-public interface ModelMapper<F, T> extends Function<F, T> {
+public interface ModelMapper<F, T> {
 
     /**
-     * Map a collection of elements.
+     * Mops from one type to another.
      *
-     * @param fromList collection to map.
-     * @return returning collection with mapped elements.
+     * @param from type to map from.
+     * @return mapped type.
      */
-    default List<T> applyList(List<F> fromList) {
-        return fromList.stream().map(this).collect(Collectors.toList());
-    }
+    T map(F from);
 
 }

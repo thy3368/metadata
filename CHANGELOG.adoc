@@ -4,6 +4,7 @@
 === Features
 * [#95] - Introduce executeQuery for a single element
 * [#98] - Adopt Query API for a GraphQL version
+* [#105] - Use mapstruct in model mappers
 
 === Miscellaneous
 * [#100] - Review Liquibase scripts compatibility with different database dialects

@@ -103,7 +103,7 @@ public class FormMetadataDaoImpl extends AbstractMetadataDao implements FormMeta
             List<FormSection> children = parentToChildrenMap.get(Optional.of(section.getName()));
             List<FormSection> convertedChildren = toHierarchicalList(children, parentToChildrenMap);
 
-            FormSection mappedSection = formSectionModelMapper.apply(section);
+            FormSection mappedSection = formSectionModelMapper.map(section);
             resultList.add(mappedSection);
             section.setSubSections(convertedChildren);
         }
