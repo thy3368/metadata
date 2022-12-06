@@ -22,6 +22,7 @@ import io.github.sergeivisotsky.metadata.engine.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.domain.Navigation;
 import io.github.sergeivisotsky.metadata.engine.domain.NavigationElement;
 import io.github.sergeivisotsky.metadata.engine.domain.NavigationType;
+import io.github.sergeivisotsky.metadata.engine.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,10 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
+import static io.github.sergeivisotsky.metadata.engine.TestUtils.format;
+import static io.github.sergeivisotsky.metadata.engine.dao.impl.NavigationMetadataDaoImpl.EXCEPTION_MESSAGE;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -44,6 +49,9 @@ import static org.mockito.Mockito.when;
  * @author Sergei Visotsky
  */
 class NavigationMetadataDaoImplTest extends AbstractMetadataDao {
+
+    private static final String TEST_VIEW_NAME = "someView";
+    private static final String TEST_SQL = "SELECT * FROM some_table WHERE id = 1";
 
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -75,8 +83,7 @@ class NavigationMetadataDaoImplTest extends AbstractMetadataDao {
 
         navigation.setElements(List.of(element));
 
-        final String mockSql = "SELECT * FROM some_table WHERE id = 1";
-        when(navigationMapper.getSql()).thenReturn(mockSql);
+        when(navigationMapper.getSql()).thenReturn(TEST_SQL);
         when(jdbcTemplate.queryForObject(anyString(), anyMap(), eq(RowMapper.class)))
                 .thenReturn((rs, rowNum) -> navigation);
 
@@ -86,5 +93,20 @@ class NavigationMetadataDaoImplTest extends AbstractMetadataDao {
         //then
         verify(navigationMapper).getSql();
         verify(jdbcTemplate).queryForObject(any(), anyMap(), any(RowMapper.class));
+    }
+
+    @Test
+    void shouldThrowAnExceptionWhileGettingNavigationMetadata() {
+        //given
+        when(navigationMapper.getSql()).thenReturn(TEST_SQL);
+        when(jdbcTemplate.queryForObject(anyString(), anyMap(), any(RowMapper.class)))
+                .thenThrow(RuntimeException.class);
+
+        //when
+        MetadataStorageException exception = assertThrows(MetadataStorageException.class,
+                () -> dao.getNavigationMetadata(TEST_VIEW_NAME));
+
+        //then
+        assertEquals(format(EXCEPTION_MESSAGE, TEST_VIEW_NAME), exception.getMessage());
     }
 }

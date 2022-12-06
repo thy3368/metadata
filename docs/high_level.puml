@@ -1,0 +1,69 @@
+@startuml
+
+top to bottom direction
+
+package binary {
+  [metadata-deployer] as md
+  note top of md
+    Contains a Liquibase scripts that
+    initialise an Out-Of-The-Box metadata databse schema
+    as well as provide an initial metadata itself.
+  end note
+  [metadata-engine] as me
+  note top of me
+    Core components of the engine
+    like Out-Of-The-Box DAO,
+    core domain models and generic features
+    as well as auto-configuration.
+    Aimed to contain a tiny and highly
+    customisable building blocks.
+  end note
+  [metadata-rest] as mr
+  note top of mr
+    Exposes a REST endpoints that expose
+    a metadata REST interface.
+  end note
+  [metadata-graphql] as mg
+  note top of mg
+    Exposes a GraphQL query resolvers that
+    expose a metadata GraphQL interface.
+  end note
+  me -down-> mr
+  me -down-> mg
+}
+
+package microservices {
+  node metadata-preconfig-rest as restnode {
+    [metadata-rest-app] as mpr
+    [metadata-rest-deployer] as mprd
+
+    mr .down.> mpr: <depends>
+    md .down.> mprd: <depends>
+  }
+
+  note bottom of restnode
+    Docker containers (microservices):
+    * metadata-rest-app - a main executable metadata
+    application which exposes a REST endpoints
+    * metadata-rest-deployer - a main executable metadata
+    deployment application
+  end note
+
+  node metadata-preconfig-graphql as graphqlnode {
+    [metadata-graphql-app] as mpg
+    [metadata-graphql-deployer] as mpgd
+
+    mg .down.> mpg: <depends>
+    md .down.> mpgd: <depends>
+  }
+
+  note bottom of graphqlnode
+    Docker containers (microservices):
+    * metadata-graphql-app - a main executable metadata
+    application which exposes a GraphQL query resolves
+    * metadata-graphql-deployer - a main executable metadata
+    deployment application
+  end note
+}
+
+@enduml

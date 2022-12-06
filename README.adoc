@@ -33,6 +33,13 @@ corresponding use case specifics to be able to properly handle a metadata and co
 .. <<chart_metadata_db,Database part>>
 . <<graphql_part,GraphQL based interface configuration>>
 
+[[high_level_overview]]
+== High level overview
+The following picture describes a dependency graph of a core binary artifacts (JARs in this particular case)
+with a corresponding microservices as they are.
+
+image::https://github.com/sergeivisotsky/metadata-provider/blob/master/docs/high_level.png[High-level overview,874,1150]
+
 [[getting_started]]
 == Get started
 Metadata Engine supports two interfaces REST and GraphQL depending on particular UI architecture and overall client design.

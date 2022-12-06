@@ -32,6 +32,9 @@ import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
  */
 public class NavigationMetadataDaoImpl extends AbstractMetadataDao implements NavigationMetadataDao {
 
+    static final String EXCEPTION_MESSAGE = "Unable to get a navigation metadata ny invocation " +
+            "of DAO with the following parameters: viewName={}";
+
     private final MetadataMapper<List<Navigation>> navigationMapper;
 
     public NavigationMetadataDaoImpl(MetadataMapper<List<Navigation>> navigationMapper) {
@@ -48,8 +51,7 @@ public class NavigationMetadataDaoImpl extends AbstractMetadataDao implements Na
             return jdbcTemplate.queryForObject(navigationMapper.getSql(), params,
                     (rs, index) -> normalizeNavigationMetadata(navigationMapper.map(rs)));
         } catch (Exception e) {
-            throw new MetadataStorageException(e, "Unable to get a navigation metadata ny invocation " +
-                    "of DAO with the following parameters: viewName={}", viewName);
+            throw new MetadataStorageException(e, EXCEPTION_MESSAGE, viewName);
         }
     }
 
