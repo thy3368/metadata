@@ -3,7 +3,7 @@
 top to bottom direction
 
 package binary {
-  [metadata-deployer] as md
+  [metadata-deploy] as md
   note top of md
     Contains a Liquibase scripts that
     initialise an Out-Of-The-Box metadata database schema
