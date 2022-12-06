@@ -30,9 +30,6 @@ import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
  */
 public class LayoutMetadataDaoImpl extends AbstractMetadataDao implements LayoutMetadataDao {
 
-    static final String EXCEPTION_MESSAGE = "Unable to get a layout metadata with the " +
-            "following parameters: viewName={}";
-
     private final MetadataMapper<Layout> layoutMapper;
 
     public LayoutMetadataDaoImpl(MetadataMapper<Layout> layoutMapper) {
@@ -48,7 +45,8 @@ public class LayoutMetadataDaoImpl extends AbstractMetadataDao implements Layout
             Map<String, Object> params = Map.of("viewName", viewName);
             return executeQuery(params, layoutMapper);
         } catch (Exception e) {
-            throw new MetadataStorageException(e, EXCEPTION_MESSAGE, viewName);
+            throw new MetadataStorageException(e, "Unable to get a layout metadata with the " +
+                    "following parameters: viewName={}", viewName);
         }
     }
 }

@@ -27,13 +27,12 @@ import io.github.sergeivisotsky.metadata.engine.domain.ComboBox;
 import io.github.sergeivisotsky.metadata.engine.domain.ComboBoxContent;
 import io.github.sergeivisotsky.metadata.engine.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
+import org.springframework.dao.DataAccessException;
 
 /**
  * @author Sergei Visotsky
  */
 public class ComboBoxMetadataDaoImpl extends AbstractMetadataDao implements ComboBoxMetadataDao {
-
-    static final String EXCEPTION_MESSAGE = "An exception occurred while getting a combo box metadata with the following parameters: id={}";
 
     private final MetadataMapper<ComboBox> comboBoxMapper;
 
@@ -59,8 +58,9 @@ public class ComboBoxMetadataDaoImpl extends AbstractMetadataDao implements Comb
                 return comboBox;
             });
             return normalizeCombos(combos);
-        } catch (Exception e) {
-            throw new MetadataStorageException(e, EXCEPTION_MESSAGE, id);
+        } catch (DataAccessException e) {
+            throw new MetadataStorageException(e, "Unable to get a combo box metadata by the " +
+                    "following parameters: id={}", id);
         }
     }
 

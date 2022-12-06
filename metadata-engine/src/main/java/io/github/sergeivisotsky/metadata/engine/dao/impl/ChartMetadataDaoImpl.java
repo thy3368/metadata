@@ -23,7 +23,6 @@ import io.github.sergeivisotsky.metadata.engine.dao.AbstractMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.dao.ChartMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.domain.chart.Category;
 import io.github.sergeivisotsky.metadata.engine.domain.chart.ChartMetadata;
-import io.github.sergeivisotsky.metadata.engine.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
 
 /**
@@ -31,10 +30,7 @@ import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
  */
 public class ChartMetadataDaoImpl extends AbstractMetadataDao implements ChartMetadataDao {
 
-    static final String GET_CHART_METADATA_EXCEPTION_MSG = "Exception occurred while getting chart metadata. chartName={}";
-    static final String GET_CHART_CATEGORY_METADATA_EXCEPTION_MSG = "Exception occurred while getting chart category metadata. chartId={}";
-
-    static final String QUERY_CHART_CATEGORY = "SELECT ct.key, ct.value FROM category ct WHERE chart_id = :chartId";
+    private static final String QUERY_CHART_CATEGORY = "SELECT ct.key, ct.value FROM category ct WHERE chart_id = :chartId";
 
     private final MetadataMapper<ChartMetadata> chartMetadataMapper;
 
@@ -47,26 +43,18 @@ public class ChartMetadataDaoImpl extends AbstractMetadataDao implements ChartMe
      */
     @Override
     public ChartMetadata getChartMetadata(String chartName) {
-        try {
-            Map<String, Object> params = Map.of("chartName", chartName);
-            return jdbcTemplate.queryForObject(chartMetadataMapper.getSql(), params,
-                    (rs, index) -> {
-                        ChartMetadata metadata = chartMetadataMapper.map(rs);
-                        metadata.setCategories(getChartCategoryMetadata(rs.getLong("id")));
-                        return metadata;
-                    });
-        } catch (Exception e) {
-            throw new MetadataStorageException(e, GET_CHART_METADATA_EXCEPTION_MSG, chartName);
-        }
+        Map<String, Object> params = Map.of("chartName", chartName);
+        return jdbcTemplate.queryForObject(chartMetadataMapper.getSql(), params,
+                (rs, index) -> {
+                    ChartMetadata metadata = chartMetadataMapper.map(rs);
+                    metadata.setCategories(getChartCategoryMetadata(rs.getLong("id")));
+                    return metadata;
+                });
     }
 
-    List<Category> getChartCategoryMetadata(Long chartId) {
-        try {
-            Map<String, Object> params = Map.of("chartId", chartId);
-            return jdbcTemplate.query(QUERY_CHART_CATEGORY, params, (rs, rowNum) ->
-                    new Category(rs.getString("key"), rs.getString("value")));
-        } catch (Exception e) {
-            throw new MetadataStorageException(e, GET_CHART_CATEGORY_METADATA_EXCEPTION_MSG, chartId);
-        }
+    private List<Category> getChartCategoryMetadata(Long chartId) {
+        Map<String, Object> params = Map.of("chartId", chartId);
+        return jdbcTemplate.query(QUERY_CHART_CATEGORY, params, (rs, rowNum) ->
+                new Category(rs.getString("key"), rs.getString("value")));
     }
 }

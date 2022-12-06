@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.sergeivisotsky.metadata.engine.dao.AbstractMetadataDao;
+import io.github.sergeivisotsky.metadata.engine.dao.LayoutMetadataDao;
 import io.github.sergeivisotsky.metadata.engine.domain.ComboBox;
 import io.github.sergeivisotsky.metadata.engine.domain.ComboBoxContent;
-import io.github.sergeivisotsky.metadata.engine.exception.MetadataStorageException;
 import io.github.sergeivisotsky.metadata.engine.mapper.MetadataMapper;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +33,8 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import static io.github.sergeivisotsky.metadata.engine.TestUtils.format;
-import static io.github.sergeivisotsky.metadata.engine.dao.impl.ComboBoxMetadataDaoImpl.EXCEPTION_MESSAGE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -51,14 +48,14 @@ import static org.mockito.Mockito.when;
  */
 class ComboBoxMetadataDaoImplTest extends AbstractMetadataDao {
 
-    private static final Long TEST_ID = 1L;
-    private static final String TEST_SQL = "SELECT * FROM some_table WHERE id = 1";
-
     @Mock
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Mock
     private MetadataMapper<ComboBox> comboBoxMapper;
+
+    @Mock
+    private LayoutMetadataDao layoutMetadataDao;
 
     @InjectMocks
     private ComboBoxMetadataDaoImpl dao;
@@ -96,31 +93,17 @@ class ComboBoxMetadataDaoImplTest extends AbstractMetadataDao {
     @Test
     void shouldGetComboBoxesByFormMetadataId() {
         //given
-        when(comboBoxMapper.getSql()).thenReturn(TEST_SQL);
+        when(comboBoxMapper.getSql()).thenReturn("SELECT * FROM some_table WHERE id = 1");
         when(jdbcTemplate.query(anyString(), anyMap(), any(RowMapper.class))).thenReturn(comboBoxes);
 
         //when
-        List<ComboBox> combos = dao.getComboBoxesByFormMetadataId(TEST_ID);
+        List<ComboBox> combos = dao.getComboBoxesByFormMetadataId(1L);
 
         //then
         assertEquals(1, combos.size());
         assertNotEquals(0, combos.get(0).getComboContent().size());
         verify(comboBoxMapper).getSql();
         verify(jdbcTemplate).query(anyString(), anyMap(), any(RowMapper.class));
-    }
-
-    @Test
-    void shouldThrowExceptionWhileGettingComboBoxesByFormMetadataId() {
-        //given
-        when(comboBoxMapper.getSql()).thenReturn(TEST_SQL);
-        when(jdbcTemplate.query(anyString(), anyMap(), any(RowMapper.class))).thenThrow(RuntimeException.class);
-
-        //when
-        MetadataStorageException exception = assertThrows(MetadataStorageException.class,
-                () -> dao.getComboBoxesByFormMetadataId(TEST_ID));
-
-        //then
-        assertEquals(format(EXCEPTION_MESSAGE, TEST_ID), exception.getMessage());
     }
 
     @Test
