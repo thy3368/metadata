@@ -6,7 +6,7 @@ package binary {
   [metadata-deployer] as md
   note top of md
     Contains a Liquibase scripts that
-    initialise an Out-Of-The-Box metadata databse schema
+    initialise an Out-Of-The-Box metadata database schema
     as well as provide an initial metadata itself.
   end note
   [metadata-engine] as me
