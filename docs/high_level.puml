@@ -20,13 +20,11 @@ package binary {
   end note
   [metadata-rest] as mr
   note top of mr
-    Exposes a REST endpoints that expose
-    a metadata REST interface.
+    Exposes a metadata REST endpoints.
   end note
   [metadata-graphql] as mg
   note top of mg
-    Exposes a GraphQL query resolvers that
-    expose a metadata GraphQL interface.
+    Exposes a metadata GraphQL query resolvers.
   end note
   me -down-> mr
   me -down-> mg
