@@ -38,7 +38,7 @@ corresponding use case specifics to be able to properly handle a metadata and co
 The following picture describes a dependency graph of a core binary artifacts (JARs in this particular case)
 with a corresponding microservices as they are.
 
-image::https://github.com/sergeivisotsky/metadata-provider/blob/master/docs/high_level.png[High-level overview,874,1150]
+image::https://github.com/sergeivisotsky/metadata-provider/blob/master/docs/high_level.png[High-level overview]
 
 [[getting_started]]
 == Get started
