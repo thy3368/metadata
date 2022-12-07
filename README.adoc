@@ -14,6 +14,7 @@ corresponding use case specifics to be able to properly handle a metadata and co
 
 == Table of contents
 . <<getting_started,Get started>>
+. <<dependency_graph,Dependency graph>>
 . <<extension_points,Extension points>>
 . <<ootb_usage,OOTB usage of combo box metadata>>
 . <<sample_extension,Sample extension>>
@@ -32,13 +33,6 @@ corresponding use case specifics to be able to properly handle a metadata and co
 .. <<chart_metadata_code,Code part>>
 .. <<chart_metadata_db,Database part>>
 . <<graphql_part,GraphQL based interface configuration>>
-
-[[high_level_overview]]
-== High level overview
-The following picture describes a dependency graph of a core binary artifacts (JARs in this particular case)
-with a corresponding microservices as they are.
-
-image::https://github.com/sergeivisotsky/metadata-provider/blob/master/docs/high_level.png[High-level overview]
 
 [[getting_started]]
 == Get started
@@ -71,6 +65,14 @@ Dependencies that it contains:
 * metadata-rest - metadata REST based interface
 * metadata-graphql - metadata GraphQL based interface
 * metadata-deploy - metadata Liquibase deployment scripts (Out-Of-The-Box metadata engine database schema)
+
+[[dependency_graph]]
+== Dependency graph
+The following picture describes a dependency graph of a core binary artifacts (JARs in this particular case)
+with a corresponding microservices as they are.
+
+image::https://github.com/sergeivisotsky/metadata-provider/blob/master/docs/high_level.png[High-level overview]
+
 
 [[extension_points]]
 == Extension points
